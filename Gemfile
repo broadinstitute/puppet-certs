@@ -1,0 +1,10 @@
+source 'https://rubygems.org'
+
+gem 'rake'
+gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '>= 3.8.0'
+gem 'rspec'
+gem 'rspec-puppet'
+gem 'puppetlabs_spec_helper'
+gem 'puppet-lint'
+gem 'puppet-syntax'
+gem 'metadata-json-lint'
