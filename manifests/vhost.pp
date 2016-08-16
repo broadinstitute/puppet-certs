@@ -49,6 +49,7 @@ define certs::vhost(
   $source_path       = undef,
   $cert_ext          = $::certs::params::cert_ext,
   $cert_path         = $::certs::params::cert_path,
+  $key_ext           = $::certs::params::key_ext,
   $keys_path         = $::certs::params::keys_path,
   $cert_chain        = $::certs::params::cert_chain,
   $chain_name        = $::certs::params::chain_name,
@@ -99,22 +100,20 @@ define certs::vhost(
   validate_numeric($key_mode)
 
   $cert = "${name}${cert_ext}"
-  $key = "${name}.key"
-  if $cert_chain { $chain = "${chain_name}${chain_ext}" }
-  if $ca_cert { $ca = "${ca_name}${ca_ext}" }
+  $key = "${name}${key_ext}"
 
-  if (defined(Service[$service]) and $service != '') {
-    validate_string($service)
+  if $cert_chain {
+    $chain = "${chain_name}${chain_ext}"
+  }
+  if $ca_cert {
+    $ca = "${ca_name}${ca_ext}"
+  }
 
-    File["${cert_path}/${cert}"] ~> Service[$service]
-    File["${keys_path}/${key}"] ~> Service[$service]
-
-    if $cert_chain {
-      File["${chain_path}/${chain}"] ~> Service[$service]
-    }
-
-    if $ca_cert {
-      File ["${ca_path}/${ca}"] ~> Service[$service]
+  if $service != '' {
+    if defined(Service[$service]) {
+      $service_notify = Service[$service]
+    } else {
+      $service_notify = undef
     }
   }
 
@@ -124,6 +123,7 @@ define certs::vhost(
     owner  => $owner,
     group  => $group,
     mode   => $cert_mode,
+    notify => $service_notify,
   } ->
   file { "${keys_path}/${key}":
     ensure => file,
@@ -131,6 +131,7 @@ define certs::vhost(
     owner  => $owner,
     group  => $group,
     mode   => $key_mode,
+    notify => $service_notify,
   }
 
   if ($cert_chain and !defined(File["${chain_path}/${chain}"])) {
@@ -140,6 +141,7 @@ define certs::vhost(
       owner  => $owner,
       group  => $group,
       mode   => $cert_mode,
+      notify => $service_notify,
     }
   }
 
@@ -150,6 +152,7 @@ define certs::vhost(
       owner  => $owner,
       group  => $group,
       mode   => $cert_mode,
+      notify => $service_notify,
     }
   }
 }

@@ -1,0 +1,29 @@
+{
+  "name": "puppet-certs",
+  "version": "0.1.0",
+  "author": "Riccardo Calixte <rcalixte@broadinstitute.org>",
+  "summary": "Puppet configuration for SSL certificate installation",
+  "license": "Apache 2.0",
+  "source": "https://github.com/broadinstitute/puppet-certs",
+  "project_page": "https://github.com/broadinstitute/puppet-certs",
+  "issues_url": "https://github.com/broadinstitute/puppet-certs/issues",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7",
+        "6"
+      ]
+    }
+  ],
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 4.0.0"}
+  ]
+}

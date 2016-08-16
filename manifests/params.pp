@@ -51,11 +51,11 @@
 # The location of the certificate chain file. Typically references a module's files.
 # e.g. 'puppet:///chain_certs' will search $fileserverconfpath on the master for the
 # specified files. Defaults to source_path.
-# 
+#
 # [ca_cert]
 # Boolean for whether to look for a CA certificate file.
 # Optional value. Defaults to false.
-# 
+#
 # [ca_name]
 # The name of the CA certificate file.
 # Optional value. Defaults to undef.
@@ -129,6 +129,7 @@ class certs::params {
     }
   }
   $cert_ext   = '.crt'
+  $key_ext    = '.key'
   $cert_chain = false
   $chain_name = ''
   $chain_ext  = $cert_ext
