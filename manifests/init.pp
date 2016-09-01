@@ -13,7 +13,10 @@
 # Copyright 2016
 #
 class certs (
-  $sites = hiera_hash('certs::sites', undef),
-) inherits ::certs::params {
-  create_resources('certs::site', $sites)
+  $sites = hiera_hash('certs::sites', {}),
+) {
+
+    include ::certs::params
+
+    create_resources('certs::site', $sites)
 }

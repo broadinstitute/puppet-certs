@@ -1,4 +1,6 @@
 # certs
+[![Build Status](https://travis-ci.org/broadinstitute/puppet-certs.svg?branch=master)](https://travis-ci.org/broadinstitute/puppet-certs)
+[![License (Apache 2.0)](https://img.shields.io/badge/license-Apache-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 #### Table of Contents
 

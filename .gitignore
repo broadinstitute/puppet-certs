@@ -10,3 +10,5 @@
 /log
 .yardoc
 coverage
+.librarian
+.tmp

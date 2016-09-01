@@ -101,6 +101,19 @@
 # Permissions of the private keys.
 # Optional value. Default: '0600'.
 #
+# [cert_dir_mode]
+# Permissions of the certificate directory.
+# Optional value. Default: '0755'.
+#
+# [key_dir_mode]
+# Permissions of the private keys directory.
+# Optional value. Default: '0755'.
+#
+# [merge_chain]
+# Option to merge the intermediate chain into the actual certificate file,
+# which is required by some software.
+# Optional value. Default: false.
+#
 class certs::params {
   case $::osfamily {
     'RedHat': {
@@ -131,17 +144,20 @@ class certs::params {
       fail("Class['certs::params']: Unsupported osfamily: ${::osfamily}")
     }
   }
-  $cert_ext   = '.crt'
-  $key_ext    = '.key'
-  $cert_chain = false
-  $chain_name = ''
-  $chain_ext  = $cert_ext
-  $chain_path = $cert_path
-  $ca_cert    = false
-  $ca_name    = ''
-  $ca_ext     = $cert_ext
-  $ca_path    = $cert_path
-  $owner      = 'root'
-  $cert_mode  = 0644
-  $key_mode   = 0600
+  $cert_ext      = '.crt'
+  $key_ext       = '.key'
+  $cert_chain    = false
+  $chain_name    = ''
+  $chain_ext     = $cert_ext
+  $chain_path    = $cert_path
+  $ca_cert       = false
+  $ca_name       = ''
+  $ca_ext        = $cert_ext
+  $ca_path       = $cert_path
+  $owner         = 'root'
+  $cert_mode     = '0644'
+  $key_mode      = '0600'
+  $cert_dir_mode = '0755'
+  $key_dir_mode  = '0755'
+  $merge_chain   = false
 }
