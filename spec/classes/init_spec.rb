@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'certs', :type => :class do
 
-  [ 'Debian', 'RedHat' ].each do |osfamily|
+  [ 'Debian', 'FreeBSD', 'Gentoo', 'RedHat' ].each do |osfamily|
 
     context "on #{osfamily}" do
 
@@ -12,7 +12,6 @@ describe 'certs', :type => :class do
           :operatingsystem        => 'Debian',
           :lsbdistid              => 'Debian',
           :lsbdistcodename        => 'wheezy',
-          :kernelrelease          => '3.2.0-4-amd64',
           :operatingsystemrelease => '7.3',
           :operatingsystemmajrelease => '7',
         } }
@@ -20,6 +19,33 @@ describe 'certs', :type => :class do
         context 'with defaults for all parameters' do
           it { should contain_class('certs') }
         end
+      end
+
+      if osfamily == 'FreeBSD'
+        let(:facts) { {
+          :osfamily => osfamily,
+          :operatingsystem => 'FreeBSD',
+          :operatingsystemrelease => '10.0-RELEASE-p18',
+          :operatingsystemmajrelease => '10',
+        } }
+
+        context 'with defaults for all parameters' do
+          it { should contain_class('certs') }
+        end
+
+      end
+
+      if osfamily == 'Gentoo'
+        let(:facts) { {
+          :osfamily => osfamily,
+          :operatingsystem => 'Gentoo',
+          :operatingsystemrelease => '3.16.1-gentoo',
+        } }
+
+        context 'with defaults for all parameters' do
+          it { should contain_class('certs') }
+        end
+
       end
 
       if osfamily == 'RedHat'

@@ -193,7 +193,7 @@ e.g. *'puppet:///site_certs'* will search for the mount point defined in `filese
 ##### `cert_ext`
 The extension of the certificate file.
 
-Optional value. **Default: crt.**
+Optional value. **Default: '.crt'.**
 
 ##### `cert_path`
 Location where the certificate files will be stored on the managed node.
@@ -203,6 +203,11 @@ Optional value. Defaults:
   - **Debian** and **SuSE**: `/etc/ssl/certs`
   - **FreeBSD**: `/usr/local/etc/apache24`
   - **Gentoo**: `/etc/ssl/apache2`
+
+##### `key_ext`
+The extension of the private key file.
+
+Optional value. **Default: '.key'.**
 
 ##### `key_path`
 Location where the private keys will be stored on the managed node.
@@ -317,7 +322,7 @@ Optional value. **Default: false.**
 ## Limitations
 
 This module is CI tested against [open source Puppet](https://docs.puppetlabs.com/puppet) on:
-- Centos 5 and 6
+- CentOS 5 and 6
 - RHEL 5, 6, and 7
 
 This module also provides functions for other distributions and operating systems, such as FreeBSD and Gentoo, but is not formally tested on them and are subject to regressions.
@@ -326,7 +331,7 @@ No issues have been identified as of yet.
 
 ## Release Notes
 
-### 1.0.0 (September 2, 2016)
+### 1.0.0 (September 6, 2016)
 #### Summary
 * Introducing new features, primarily an option to merge certificates for services that require it
 * Adding Vagrant support for testing using Puppet 4

@@ -50,6 +50,9 @@
 #
 define certs::site(
   $source_path       = undef,
+  $cert_content      = undef,
+  $key_content       = undef,
+  $ensure            = 'present',
   $cert_ext          = undef,
   $cert_path         = undef,
   $key_ext           = undef,
@@ -59,11 +62,13 @@ define certs::site(
   $chain_ext         = undef,
   $chain_path        = undef,
   $chain_source_path = $source_path,
+  $chain_content     = undef,
   $ca_cert           = false,
   $ca_name           = undef,
   $ca_ext            = undef,
   $ca_path           = undef,
   $ca_source_path    = $source_path,
+  $ca_content        = undef,
   $service           = undef,
   $owner             = undef,
   $group             = undef,
@@ -82,9 +87,21 @@ define certs::site(
   if ($name == undef) {
     fail('You must provide a name value for the site to certs::site.')
   }
-  if ($source_path == undef) {
-    fail('You must provide a source_path for the SSL files to certs::site.')
+  if ($source_path == undef and ($cert_content == undef or $key_content == undef)) {
+    fail('You must provide a source_path or cert_content/key_content combination for the SSL files to certs::site.')
   }
+
+  if ($source_path and ($cert_content or $key_content)) {
+    fail('You can only provide $source_path or $cert_content/$key_content, not both.')
+  }
+
+  if !$source_path {
+    if !($cert_content and $key_content) {
+      fail('If source_path is not set, $cert_content and $key_content must both be set.')
+    }
+  }
+
+  validate_re($ensure, '^(present|absent)$')
 
   $_cert_ext      = pick_default($cert_ext, $::certs::_cert_ext)
   $_cert_path     = pick_default($cert_path, $::certs::_cert_path)
@@ -111,7 +128,7 @@ define certs::site(
   validate_string($_ca_ext)
   validate_absolute_path($_ca_path)
 
-  if $service != '' {
+  if $service != undef {
     validate_string($service)
   }
 
@@ -131,8 +148,16 @@ define certs::site(
     if ($chain_name == undef) {
       fail('You must provide a chain_name value for the cert chain to certs::site.')
     }
-    if ($chain_source_path == undef) {
-      fail('You must provide a chain_source_path for the SSL files to certs::site.')
+    $chain = "${chain_name}${_chain_ext}"
+
+    if $chain_content == undef {
+      if ($chain_source_path == undef) {
+        fail('You must provide a chain_source_path for the SSL files to certs::site.')
+      }
+
+      $chain_source = "${chain_source_path}/${chain}"
+    } else {
+      $chain_source = undef
     }
   }
 
@@ -141,9 +166,16 @@ define certs::site(
     if ($ca_name == undef) {
       fail('You must provide a ca_name value for the CA cert to certs::site.')
     }
+    $ca = "${ca_name}${_ca_ext}"
 
-    if ($ca_source_path == undef) {
-      fail('You must provide a ca_source_path for the SSL files to certs::site.')
+    if $ca_content == undef {
+      if ($ca_source_path == undef) {
+        fail('You must provide a ca_source_path for the SSL files to certs::site.')
+      }
+
+      $ca_source = "${ca_source_path}/${ca}"
+    } else {
+      $ca_source = undef
     }
   }
 
@@ -152,19 +184,14 @@ define certs::site(
   $cert = "${name}${_cert_ext}"
   $key  = "${name}${_key_ext}"
 
-  if $cert_chain {
-    $chain = "${chain_name}${_chain_ext}"
-  }
-  if $ca_cert {
-    $ca = "${ca_name}${_ca_ext}"
-  }
-
-  if $service != '' {
+  if $service != undef {
     if defined(Service[$service]) {
       $service_notify = Service[$service]
     } else {
       $service_notify = undef
     }
+  } else {
+    $service_notify = undef
   }
 
   if !defined(File[$_cert_path]) {
@@ -207,65 +234,89 @@ define certs::site(
     }
   }
 
-  if $merge_chain {
-    concat { "${name}_cert_merged":
-      ensure         => 'present',
-      ensure_newline => true,
-      backup         => false,
-      path           => "${_cert_path}/${cert}",
-      owner          => $_owner,
-      group          => $_group,
-      mode           => $_cert_mode,
-      require        => File[$_cert_path],
-      notify         => $service_notify,
-    }
+  if $source_path == undef {
+    $cert_source = undef
+    $key_source = undef
+  } else {
+    $cert_source = "${source_path}/${cert}"
+    $key_source = "${source_path}/${key}"
+  }
 
-    concat::fragment { "${cert}_certificate":
-      target => "${name}_cert_merged",
-      source => "${source_path}/${cert}",
-      order  => '01'
-    }
+  if $ensure == 'present' {
+    if $merge_chain {
+      concat { "${name}_cert_merged":
+        ensure         => 'present',
+        ensure_newline => true,
+        backup         => false,
+        path           => "${_cert_path}/${cert}",
+        owner          => $_owner,
+        group          => $_group,
+        mode           => $_cert_mode,
+        require        => File[$_cert_path],
+        notify         => $service_notify,
+      }
 
-    if $cert_chain {
-      concat::fragment { "${cert}_chain":
-        target => "${name}_cert_merged",
-        source => "${chain_source_path}/${chain}",
-        order  => '50'
+      concat::fragment { "${cert}_certificate":
+        target  => "${name}_cert_merged",
+        source  => $cert_source,
+        content => $cert_content,
+        order   => '01'
+      }
+
+      if $cert_chain {
+        concat::fragment { "${cert}_chain":
+          target  => "${name}_cert_merged",
+          source  => $chain_source,
+          content => $chain_content,
+          order   => '50'
+        }
+      }
+      if $ca_cert {
+        concat::fragment { "${cert}_ca":
+          target  => "${name}_cert_merged",
+          source  => $ca_source,
+          content => $ca_content,
+          order   => '90'
+        }
+      }
+    } else {
+      file { "${_cert_path}/${cert}":
+        ensure  => file,
+        source  => $cert_source,
+        content => $cert_content,
+        owner   => $_owner,
+        group   => $_group,
+        mode    => $_cert_mode,
+        require => File[$_cert_path],
+        notify  => $service_notify,
       }
     }
-    if $ca_cert {
-      concat::fragment { "${cert}_ca":
-        target => "${name}_cert_merged",
-        source => "${ca_source_path}/${ca}",
-        order  => '90'
-      }
+
+    file { "${_key_path}/${key}":
+      ensure  => file,
+      source  => $key_source,
+      content => $key_content,
+      owner   => $_owner,
+      group   => $_group,
+      mode    => $_key_mode,
+      require => File[$_key_path],
+      notify  => $service_notify,
     }
   } else {
     file { "${_cert_path}/${cert}":
-      ensure  => file,
-      source  => "${source_path}/${cert}",
-      owner   => $_owner,
-      group   => $_group,
-      mode    => $_cert_mode,
-      require => File[$_cert_path],
-      notify  => $service_notify,
+      ensure => $ensure,
     }
-  }
 
-  file { "${_key_path}/${key}":
-    ensure  => file,
-    source  => "${source_path}/${key}",
-    owner   => $_owner,
-    group   => $_group,
-    mode    => $_key_mode,
-    require => File[$_key_path],
-    notify  => $service_notify,
+    file { "${_key_path}/${key}":
+      ensure => $ensure,
+    }
   }
 
   if ($cert_chain and !defined(File["${_chain_path}/${chain}"])) {
     file { "${_chain_path}/${chain}":
       ensure  => file,
-      source  => "${chain_source_path}/${chain}",
+      source  => $chain_source,
+      content => $chain_content,
       owner   => $_owner,
       group   => $_group,
       mode    => $_cert_mode,
@@ -277,7 +328,8 @@ define certs::site(
   if ($ca_cert and !defined(File["${_ca_path}/${ca}"])) {
     file { "${_ca_path}/${ca}":
       ensure  => file,
-      source  => "${ca_source_path}/${ca}",
+      source  => $ca_source,
+      content => $ca_content,
       owner   => $_owner,
       group   => $_group,
       mode    => $_cert_mode,
