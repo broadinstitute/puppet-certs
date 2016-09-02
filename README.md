@@ -114,6 +114,8 @@ Examples
   Certs::Site<| |> -> Apache::Vhost<| |>
 ~~~
 
+**Global Defaults:**
+
 You can also reset some of the settings in params.pp globally via the **certs** base class which will be inherited by all **certs::site** defines used that are later defined.  In this example, we can reset the default certificate and key paths for all instantiated sites so that we don't have to manually set the custom path in each site:
 
 ~~~
@@ -202,7 +204,7 @@ Optional value. Defaults:
   - **FreeBSD**: `/usr/local/etc/apache24`
   - **Gentoo**: `/etc/ssl/apache2`
 
-##### `keys_path`
+##### `key_path`
 Location where the private keys will be stored on the managed node.
 
 Optional value. Defaults:
@@ -297,6 +299,21 @@ Permissions of the private keys.
 
 Optional value. **Default: '0600'.**
 
+##### `cert_dir_mode`
+Permissions of the certificate directory.
+
+Optional value. **Default: '0755'.**
+
+##### `key_dir_mode`
+Permissions of the private keys directory.
+
+Optional value. **Default: '0755'.**
+
+##### `merge_chain`
+Option to merge the intermediate chain into the actual certificate file, which is required by some software.
+
+Optional value. **Default: false.**
+
 ## Limitations
 
 This module is CI tested against [open source Puppet](https://docs.puppetlabs.com/puppet) on:
@@ -309,7 +326,24 @@ No issues have been identified as of yet.
 
 ## Release Notes
 
-* `v0.4.0` - Initial release
+### 1.0.0 (September 2, 2016)
+#### Summary
+* Introducing new features, primarily an option to merge certificates for services that require it
+* Adding Vagrant support for testing using Puppet 4
+* Travis configuration fixes
+* Rewriting parameters for the module
+* Adding spec tests
+
+#### Features
+* The `cert_dir_mode`, `key_dir_mode`, and `merge_chain` parameters have been added to support directory modes for certificates and keys and to also merge certificates when required.
+
+#### Changes
+* Module parameters are now capable of being defined globally in the base class.
+
+### 0.4.0 (August 17, 2016)
+
+#### Summary
+Initial release
 
 ## Contributors
 
