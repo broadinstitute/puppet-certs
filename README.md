@@ -114,6 +114,32 @@ Examples
   Certs::Site<| |> -> Apache::Vhost<| |>
 ~~~
 
+You can also reset some of the settings in params.pp globally via the **certs** base class which will be inherited by all **certs::site** defines used that are later defined.  In this example, we can reset the default certificate and key paths for all instantiated sites so that we don't have to manually set the custom path in each site:
+
+~~~
+  $domain1 = 'www.example.com'
+  $domain2 = 'foo.example.com'
+
+  class { 'certs':
+    cert_path => '/path/to/certs',
+    key_path  => '/path/to/keys',
+  }
+
+  certs::site { $domain1:
+    source_path    => 'puppet:///site_certificates',
+    ca_cert        => true,
+    ca_name        => 'caname',
+    ca_source_path => 'puppet:///ca_certs',
+  }
+
+  certs::site { $domain2:
+    source_path    => 'puppet:///site_certificates',
+    ca_cert        => true,
+    ca_name        => 'caname',
+    ca_source_path => 'puppet:///ca_certs',
+  }
+~~~
+
 ## Reference
 
 - [**Public classes**](#public-classes)

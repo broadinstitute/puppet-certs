@@ -50,76 +50,113 @@
 #
 define certs::site(
   $source_path       = undef,
-  $cert_ext          = $::certs::params::cert_ext,
-  $cert_path         = $::certs::params::cert_path,
-  $key_ext           = $::certs::params::key_ext,
-  $keys_path         = $::certs::params::keys_path,
-  $cert_chain        = $::certs::params::cert_chain,
-  $chain_name        = $::certs::params::chain_name,
-  $chain_ext         = $::certs::params::chain_ext,
-  $chain_path        = $::certs::params::chain_path,
+  $cert_ext          = undef,
+  $cert_path         = undef,
+  $key_ext           = undef,
+  $key_path          = undef,
+  $cert_chain        = false,
+  $chain_name        = undef,
+  $chain_ext         = undef,
+  $chain_path        = undef,
   $chain_source_path = $source_path,
-  $ca_cert           = $::certs::params::ca_cert,
-  $ca_name           = $::certs::params::ca_name,
-  $ca_ext            = $::certs::params::ca_ext,
-  $ca_path           = $::certs::params::ca_path,
+  $ca_cert           = false,
+  $ca_name           = undef,
+  $ca_ext            = undef,
+  $ca_path           = undef,
   $ca_source_path    = $source_path,
-  $service           = $::certs::params::service,
-  $owner             = $::certs::params::owner,
-  $group             = $::certs::params::group,
-  $cert_mode         = $::certs::params::cert_mode,
-  $key_mode          = $::certs::params::key_mode,
-  $cert_dir_mode     = $::certs::params::cert_dir_mode,
-  $key_dir_mode      = $::certs::params::key_dir_mode,
-  $merge_chain       = $::certs::params::merge_chain,
+  $service           = undef,
+  $owner             = undef,
+  $group             = undef,
+  $cert_mode         = undef,
+  $key_mode          = undef,
+  $cert_dir_mode     = undef,
+  $key_dir_mode      = undef,
+  $merge_chain       = false,
 ) {
+
+  # The base class must be included first because it is used by parameter defaults
+  if ! defined(Class['certs']) {
+    fail('You must include the certs base class before using any certs defined resources')
+  }
+
   if ($name == undef) {
     fail('You must provide a name value for the site to certs::site.')
   }
   if ($source_path == undef) {
     fail('You must provide a source_path for the SSL files to certs::site.')
   }
-  validate_absolute_path($cert_path)
-  validate_absolute_path($keys_path)
+
+  $_cert_ext      = pick_default($cert_ext, $::certs::_cert_ext)
+  $_cert_path     = pick_default($cert_path, $::certs::_cert_path)
+  $_key_ext       = pick_default($key_ext, $::certs::_key_ext)
+  $_key_path      = pick_default($key_path, $::certs::_key_path)
+  $_chain_ext     = pick_default($chain_ext, $::certs::_chain_ext)
+  $_chain_path    = pick_default($chain_path, $::certs::_chain_path)
+  $_ca_ext        = pick_default($ca_ext, $::certs::_ca_ext)
+  $_ca_path       = pick_default($ca_path, $::certs::_ca_path)
+  $_service       = pick_default($service, $::certs::_service)
+  $_owner         = pick_default($owner, $::certs::_owner)
+  $_group         = pick_default($group, $::certs::_group)
+  $_cert_mode     = pick_default($cert_mode, $::certs::_cert_mode)
+  $_key_mode      = pick_default($key_mode, $::certs::_key_mode)
+  $_cert_dir_mode = pick_default($cert_dir_mode, $::certs::_cert_dir_mode)
+  $_key_dir_mode  = pick_default($key_dir_mode, $::certs::_key_dir_mode)
+
+  validate_string($_cert_ext)
+  validate_absolute_path($_cert_path)
+  validate_string($_key_ext)
+  validate_absolute_path($_key_path)
+  validate_string($_chain_ext)
+  validate_absolute_path($_chain_path)
+  validate_string($_ca_ext)
+  validate_absolute_path($_ca_path)
+
+  if $service != '' {
+    validate_string($service)
+  }
+
+  validate_string($_owner)
+  validate_string($_group)
+  validate_string($_cert_mode)
+  validate_numeric($_cert_mode)
+  validate_string($_key_mode)
+  validate_numeric($_key_mode)
+  validate_string($_cert_dir_mode)
+  validate_numeric($_cert_dir_mode)
+  validate_string($_key_dir_mode)
+  validate_numeric($_key_dir_mode)
+
   validate_bool($cert_chain)
   if $cert_chain {
     if ($chain_name == undef) {
       fail('You must provide a chain_name value for the cert chain to certs::site.')
     }
-    validate_absolute_path($chain_path)
     if ($chain_source_path == undef) {
       fail('You must provide a chain_source_path for the SSL files to certs::site.')
     }
   }
+
   validate_bool($ca_cert)
   if $ca_cert {
     if ($ca_name == undef) {
       fail('You must provide a ca_name value for the CA cert to certs::site.')
     }
-    validate_absolute_path($ca_path)
+
     if ($ca_source_path == undef) {
       fail('You must provide a ca_source_path for the SSL files to certs::site.')
     }
   }
-  validate_string($owner, $group)
-  validate_string($cert_mode)
-  validate_numeric($cert_mode)
-  validate_string($key_mode)
-  validate_numeric($key_mode)
-  validate_string($cert_dir_mode)
-  validate_numeric($cert_dir_mode)
-  validate_string($key_dir_mode)
-  validate_numeric($key_dir_mode)
+
   validate_bool($merge_chain)
 
-  $cert = "${name}${cert_ext}"
-  $key = "${name}${key_ext}"
+  $cert = "${name}${_cert_ext}"
+  $key  = "${name}${_key_ext}"
 
   if $cert_chain {
-    $chain = "${chain_name}${chain_ext}"
+    $chain = "${chain_name}${_chain_ext}"
   }
   if $ca_cert {
-    $ca = "${ca_name}${ca_ext}"
+    $ca = "${ca_name}${_ca_ext}"
   }
 
   if $service != '' {
@@ -130,43 +167,43 @@ define certs::site(
     }
   }
 
-  if !defined(File[$cert_path]) {
-    file { $cert_path:
+  if !defined(File[$_cert_path]) {
+    file { $_cert_path:
       ensure => 'directory',
       backup => false,
-      owner  => $owner,
-      group  => $group,
-      mode   => $cert_dir_mode,
+      owner  => $_owner,
+      group  => $_group,
+      mode   => $_cert_dir_mode,
     }
   }
 
-  if !defined(File[$chain_path]) {
-    file { $chain_path:
+  if !defined(File[$_chain_path]) {
+    file { $_chain_path:
       ensure => 'directory',
       backup => false,
-      owner  => $owner,
-      group  => $group,
-      mode   => $cert_dir_mode,
+      owner  => $_owner,
+      group  => $_group,
+      mode   => $_cert_dir_mode,
     }
   }
 
-  if !defined(File[$ca_path]) {
-    file { $ca_path:
+  if !defined(File[$_ca_path]) {
+    file { $_ca_path:
       ensure => 'directory',
       backup => false,
-      owner  => $owner,
-      group  => $group,
-      mode   => $cert_dir_mode,
+      owner  => $_owner,
+      group  => $_group,
+      mode   => $_cert_dir_mode,
     }
   }
 
-  if !defined(File[$keys_path]) {
-    file { $keys_path:
+  if !defined(File[$_key_path]) {
+    file { $_key_path:
       ensure => 'directory',
       backup => false,
-      owner  => $owner,
-      group  => $group,
-      mode   => $key_dir_mode,
+      owner  => $_owner,
+      group  => $_group,
+      mode   => $_key_dir_mode,
     }
   }
 
@@ -175,11 +212,11 @@ define certs::site(
       ensure         => 'present',
       ensure_newline => true,
       backup         => false,
-      path           => "${cert_path}/${cert}",
-      owner          => $owner,
-      group          => $group,
-      mode           => $cert_mode,
-      require        => File[$cert_path],
+      path           => "${_cert_path}/${cert}",
+      owner          => $_owner,
+      group          => $_group,
+      mode           => $_cert_mode,
+      require        => File[$_cert_path],
       notify         => $service_notify,
     }
 
@@ -204,47 +241,47 @@ define certs::site(
       }
     }
   } else {
-    file { "${cert_path}/${cert}":
+    file { "${_cert_path}/${cert}":
       ensure  => file,
       source  => "${source_path}/${cert}",
-      owner   => $owner,
-      group   => $group,
-      mode    => $cert_mode,
-      require => File[$cert_path],
+      owner   => $_owner,
+      group   => $_group,
+      mode    => $_cert_mode,
+      require => File[$_cert_path],
       notify  => $service_notify,
     }
   }
 
-  file { "${keys_path}/${key}":
+  file { "${_key_path}/${key}":
     ensure  => file,
     source  => "${source_path}/${key}",
-    owner   => $owner,
-    group   => $group,
-    mode    => $key_mode,
-    require => File[$keys_path],
+    owner   => $_owner,
+    group   => $_group,
+    mode    => $_key_mode,
+    require => File[$_key_path],
     notify  => $service_notify,
   }
 
-  if ($cert_chain and !defined(File["${chain_path}/${chain}"])) {
-    file { "${chain_path}/${chain}":
+  if ($cert_chain and !defined(File["${_chain_path}/${chain}"])) {
+    file { "${_chain_path}/${chain}":
       ensure  => file,
       source  => "${chain_source_path}/${chain}",
-      owner   => $owner,
-      group   => $group,
-      mode    => $cert_mode,
-      require => File[$chain_path],
+      owner   => $_owner,
+      group   => $_group,
+      mode    => $_cert_mode,
+      require => File[$_chain_path],
       notify  => $service_notify,
     }
   }
 
-  if ($ca_cert and !defined(File["${ca_path}/${ca}"])) {
-    file { "${ca_path}/${ca}":
+  if ($ca_cert and !defined(File["${_ca_path}/${ca}"])) {
+    file { "${_ca_path}/${ca}":
       ensure  => file,
       source  => "${ca_source_path}/${ca}",
-      owner   => $owner,
-      group   => $group,
-      mode    => $cert_mode,
-      require => File[$ca_path],
+      owner   => $_owner,
+      group   => $_group,
+      mode    => $_cert_mode,
+      require => File[$_ca_path],
       notify  => $service_notify,
     }
   }

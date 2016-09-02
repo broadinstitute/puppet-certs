@@ -23,7 +23,7 @@
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
 #
-# [keys_path]
+# [key_path]
 # Location where the private keys will be stored on the managed node.
 # Optional value. Defaults:
 #   - '/etc/pki/tls/private' on RedHat-based systems
@@ -117,28 +117,28 @@
 class certs::params {
   case $::osfamily {
     'RedHat': {
-      $cert_path  = '/etc/pki/tls/certs'
-      $keys_path  = '/etc/pki/tls/private'
-      $service    = 'httpd'
-      $group      = 'root'
+      $cert_path = '/etc/pki/tls/certs'
+      $key_path  = '/etc/pki/tls/private'
+      $service   = 'httpd'
+      $group     = 'root'
     }
     'Debian', 'Suse': {
-      $cert_path  = '/etc/ssl/certs'
-      $keys_path  = '/etc/ssl/private'
-      $service    = 'apache2'
-      $group      = 'root'
+      $cert_path = '/etc/ssl/certs'
+      $key_path  = '/etc/ssl/private'
+      $service   = 'apache2'
+      $group     = 'root'
     }
     'FreeBSD': {
-      $cert_path  = '/usr/local/etc/apache24'
-      $keys_path  = '/usr/local/etc/apache24'
-      $service    = 'apache24'
-      $group      = 'wheel'
+      $cert_path = '/usr/local/etc/apache24'
+      $key_path  = '/usr/local/etc/apache24'
+      $service   = 'apache24'
+      $group     = 'wheel'
     }
     'Gentoo': {
-      $cert_path  = '/etc/ssl/apache2'
-      $keys_path  = '/etc/ssl/apache2'
-      $service    = 'apache2'
-      $group      = 'wheel'
+      $cert_path = '/etc/ssl/apache2'
+      $key_path  = '/etc/ssl/apache2'
+      $service   = 'apache2'
+      $group     = 'wheel'
     }
     default: {
       fail("Class['certs::params']: Unsupported osfamily: ${::osfamily}")
@@ -146,11 +146,9 @@ class certs::params {
   }
   $cert_ext      = '.crt'
   $key_ext       = '.key'
-  $cert_chain    = false
   $chain_name    = ''
   $chain_ext     = $cert_ext
   $chain_path    = $cert_path
-  $ca_cert       = false
   $ca_name       = ''
   $ca_ext        = $cert_ext
   $ca_path       = $cert_path
@@ -159,5 +157,4 @@ class certs::params {
   $key_mode      = '0600'
   $cert_dir_mode = '0755'
   $key_dir_mode  = '0755'
-  $merge_chain   = false
 }
