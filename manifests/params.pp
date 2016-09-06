@@ -13,7 +13,7 @@
 #
 # [cert_ext]
 # The extension of the certificate file.
-# Optional value. Default: crt.
+# Optional value. Default: '.crt'.
 #
 # [cert_path]
 # Location where the certificate files will be stored on the managed node.
@@ -22,6 +22,10 @@
 #   - '/etc/ssl/certs' on Debian-based and Suse-based systems
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
+#
+# [key_ext]
+# The extension of the private key file.
+# Optional value. Default: '.key'.
 #
 # [key_path]
 # Location where the private keys will be stored on the managed node.
@@ -146,10 +150,10 @@ class certs::params {
   }
   $cert_ext      = '.crt'
   $key_ext       = '.key'
-  $chain_name    = ''
+  $chain_name    = undef
   $chain_ext     = $cert_ext
   $chain_path    = $cert_path
-  $ca_name       = ''
+  $ca_name       = undef
   $ca_ext        = $cert_ext
   $ca_path       = $cert_path
   $owner         = 'root'

@@ -12,3 +12,5 @@
 coverage
 .librarian
 .tmp
+.DS_Store
+tmp/*

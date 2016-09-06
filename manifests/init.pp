@@ -58,7 +58,7 @@ class certs (
   validate_string($_ca_ext)
   validate_absolute_path($_ca_path)
 
-  if $service != '' {
+  if $service != undef {
     validate_string($service)
   }
 
