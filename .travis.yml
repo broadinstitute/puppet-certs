@@ -1,9 +1,14 @@
 ---
 language: ruby
 sudo: false
-cache: bundler
-bundler_args: --without development system_tests
+cache:
+  bundler: true
+  directories:
+    - $TRAVIS_BUILD_DIR/spec/fixtures/modules
 before_install: rm Gemfile.lock || true
+install:
+  - bundle install --without development system_tests --path=${BUNDLE_PATH:-vendor/bundle}
+  - bundle exec rake spec_prep
 script: bundle exec rake test
 branches:
   only:
