@@ -1,5 +1,8 @@
 # certs
 [![Build Status](https://travis-ci.org/broadinstitute/puppet-certs.svg?branch=master)](https://travis-ci.org/broadinstitute/puppet-certs)
+[![Puppet Forge](https://img.shields.io/puppetforge/dt/broadinstitute/certs.svg)](https://forge.puppetlabs.com/broadinstitute/certs)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/broadinstitute/certs.svg)](https://forge.puppetlabs.com/broadinstitute/certs)
+[![Puppet Forge](https://img.shields.io/puppetforge/f/broadinstitute/certs.svg)](https://forge.puppetlabs.com/broadinstitute/certs)
 [![License (Apache 2.0)](https://img.shields.io/badge/license-Apache-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 #### Table of Contents
