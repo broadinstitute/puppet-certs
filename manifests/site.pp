@@ -77,6 +77,7 @@ define certs::site(
   $cert_dir_mode     = undef,
   $key_dir_mode      = undef,
   $merge_chain       = false,
+  $merge_key         = false,
 ) {
 
   # The base class must be included first because it is used by parameter defaults
@@ -243,7 +244,7 @@ define certs::site(
   }
 
   if $ensure == 'present' {
-    if $merge_chain {
+    if $merge_chain or $merge_key {
       concat { "${name}_cert_merged":
         ensure         => 'present',
         ensure_newline => true,
@@ -263,21 +264,32 @@ define certs::site(
         order   => '01'
       }
 
-      if $cert_chain {
-        concat::fragment { "${cert}_chain":
-          target  => "${name}_cert_merged",
-          source  => $chain_source,
-          content => $chain_content,
-          order   => '50'
-        }
+      if $merge_key {
+          concat::fragment { "${cert}_key":
+            target  => "${name}_cert_merged",
+            source  => $key_source,
+            content => $key_content,
+            order   => '02'
+          }
       }
-      if $ca_cert {
-        concat::fragment { "${cert}_ca":
-          target  => "${name}_cert_merged",
-          source  => $ca_source,
-          content => $ca_content,
-          order   => '90'
-        }
+
+      if $merge_chain {
+          if $cert_chain {
+            concat::fragment { "${cert}_chain":
+              target  => "${name}_cert_merged",
+              source  => $chain_source,
+              content => $chain_content,
+              order   => '50'
+            }
+          }
+          if $ca_cert {
+            concat::fragment { "${cert}_ca":
+              target  => "${name}_cert_merged",
+              source  => $ca_source,
+              content => $ca_content,
+              order   => '90'
+            }
+          }
       }
     } else {
       file { "${_cert_path}/${cert}":

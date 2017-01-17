@@ -322,10 +322,15 @@ Option to merge the intermediate chain into the actual certificate file, which i
 
 Optional value. **Default: false.**
 
+##### `merge_key`
+Option to merge the private key into the actual certificate file, which is required by some software.
+
+Optional value. **Default: false.**
+
 ## Limitations
 
 This module is CI tested against [open source Puppet](https://docs.puppetlabs.com/puppet) on:
-- CentOS 5 and 6
+- CentOS 5, 6, and 7
 - RHEL 5, 6, and 7
 
 This module also provides functions for other distributions and operating systems, such as FreeBSD and Gentoo, but is not formally tested on them and are subject to regressions.
@@ -334,7 +339,17 @@ No issues have been identified as of yet.
 
 ## Release Notes
 
+### 1.1.0 (January 17, 2017)
+
+#### Summary
+* Introducing an option to merge the private key into certificates for services that require it
+* Update spec replacing `should` with `is_expected.to` for all tests
+
+#### Features
+* The `merge_key` parameter has been added to support merging private keys with certificates when required.
+
 ### 1.0.0 (September 6, 2016)
+
 #### Summary
 * Introducing new features, primarily an option to merge certificates for services that require it
 * Adding Vagrant support for testing using Puppet 4
