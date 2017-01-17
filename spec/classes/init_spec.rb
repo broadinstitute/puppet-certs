@@ -17,7 +17,7 @@ describe 'certs', :type => :class do
         } }
 
         context 'with defaults for all parameters' do
-          it { should contain_class('certs') }
+          it { is_expected.to contain_class('certs') }
         end
       end
 
@@ -30,7 +30,7 @@ describe 'certs', :type => :class do
         } }
 
         context 'with defaults for all parameters' do
-          it { should contain_class('certs') }
+          it { is_expected.to contain_class('certs') }
         end
 
       end
@@ -43,7 +43,7 @@ describe 'certs', :type => :class do
         } }
 
         context 'with defaults for all parameters' do
-          it { should contain_class('certs') }
+          it { is_expected.to contain_class('certs') }
         end
 
       end
@@ -57,7 +57,7 @@ describe 'certs', :type => :class do
         } }
 
         context 'with defaults for all parameters' do
-          it { should contain_class('certs') }
+          it { is_expected.to contain_class('certs') }
         end
       end
 
