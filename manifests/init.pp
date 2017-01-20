@@ -8,10 +8,6 @@
 # Riccardo Calixte <rcalixte@broadinstitute.org>
 # Andrew Teixeira <teixeira@broadinstitute.org>
 #
-# === Copyright
-#
-# Copyright 2016
-#
 class certs (
   $cert_ext      = undef,
   $cert_path     = undef,

@@ -44,10 +44,6 @@
 # Riccardo Calixte <rcalixte@broadinstitute.org>
 # Andrew Teixeira <teixeira@broadinstitute.org>
 #
-# === Copyright
-#
-# Copyright 2016
-#
 define certs::site(
   $source_path       = undef,
   $cert_content      = undef,
@@ -184,6 +180,8 @@ define certs::site(
 
   $cert = "${name}${_cert_ext}"
   $key  = "${name}${_key_ext}"
+
+  validate_x509_rsa_key_pair("$_cert_path/$cert", "$_key_path/$key")
 
   if $service != undef {
     if defined(Service[$service]) {

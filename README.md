@@ -339,6 +339,11 @@ No issues have been identified as of yet.
 
 ## Release Notes
 
+### 1.2.0 (January 23, 2017)
+
+#### Summary
+* Updating puppetlabs-stdlib dependency to minimum 4.12.0 to use the new function `validate_x509_rsa_key_pair` to validate certificates and keys using OpenSSL.
+
 ### 1.1.0 (January 17, 2017)
 
 #### Summary
