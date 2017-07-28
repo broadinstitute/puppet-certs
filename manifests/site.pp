@@ -143,6 +143,11 @@
 # which is required by some software.
 # Optional value. Default: false.
 #
+# [merge_dhparam]
+# Option to merge the DH paramaters file into the actual certificate file,
+# which is required by some software.
+# Optional value. Default: false.
+#
 # [merge_key]
 # Option to merge the private into the actual certificate file, which is
 # required by some software.
@@ -236,6 +241,7 @@ define certs::site(
     $key_path          = undef,
     $owner             = undef,
     $merge_chain       = false,
+    $merge_dhparam     = false,
     $merge_key         = false,
     $service           = undef,
     $source_path       = undef,
@@ -292,6 +298,12 @@ define certs::site(
         $_chain_source_path = $source_path
     }
 
+    if $dhparam_content {
+        $dhparam_source = undef
+    } else {
+        $dhparam_source = "${source_path}/${_dhparam_file}"
+    }
+
     validate_bool($ca_cert)
     validate_string($_ca_ext)
     validate_absolute_path($_ca_path)
@@ -313,6 +325,8 @@ define certs::site(
     validate_numeric($_key_mode)
     validate_absolute_path($_key_path)
     validate_bool($merge_chain)
+    validate_bool($merge_dhparam)
+    validate_bool($merge_key)
     validate_string($_owner)
 
     if $service != undef {
@@ -414,7 +428,7 @@ define certs::site(
         $key_source = "${source_path}/${key}"
     }
 
-    if $merge_chain or $merge_key {
+    if $merge_chain or $merge_key or $merge_dhparam {
         concat { "${name}_cert_merged":
             ensure         => $ensure,
             ensure_newline => true,
@@ -459,6 +473,15 @@ define certs::site(
                     content => $ca_content,
                     order   => '90'
                 }
+            }
+        }
+
+        if $dhparam and $merge_dhparam {
+            concat::fragment { "${cert}_dhparam":
+                target  => "${name}_cert_merged",
+                source  => $dhparam_source,
+                content => $dhparam_content,
+                order   => '95'
             }
         }
     } else {
@@ -512,12 +535,6 @@ define certs::site(
     }
 
     if ($dhparam and !defined(File["${_cert_path}/${name}_${_dhparam_file}"])) {
-        if $dhparam_content {
-            $dhparam_source = undef
-        } else {
-            $dhparam_source = "${source_path}/${_dhparam_file}"
-        }
-
         file { "${_cert_path}/${name}_${_dhparam_file}":
             ensure  => $ensure,
             source  => $dhparam_source,

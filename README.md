@@ -337,6 +337,11 @@ Option to merge the CA and intermediate chain files into the actual certificate 
 
 Optional value. **Default: false**.
 
+##### `merge_dhparam`
+Option to merge the DH paramaters file into the actual certificate file, which is required by some software.
+
+Optional value. **Default: false**.
+
 ##### `merge_key`
 Option to merge the private key into the actual certificate file, which is required by some software.
 
@@ -378,6 +383,12 @@ This module also provides functions for other distributions and operating system
 No issues have been identified as of yet.
 
 ## Release Notes
+
+### 1.2.0 (July 28, 2017)
+
+#### Summary
+* Introducing an option to add a Diffie-Helman parameters file, including the ability to merge the file with the certificate file if necessary.
+* Many more and expanded spec tests, along with spec test cleanup
 
 ### 1.1.0 (January 17, 2017)
 
