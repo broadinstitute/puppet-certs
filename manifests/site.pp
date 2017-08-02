@@ -316,6 +316,7 @@ define certs::site(
     validate_absolute_path($_cert_path)
     validate_string($_chain_ext)
     validate_absolute_path($_chain_path)
+    validate_bool($dhparam)
     validate_re($ensure, '^(present|absent)$')
     validate_string($_group)
     validate_string($_key_dir_mode)
