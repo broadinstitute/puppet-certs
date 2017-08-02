@@ -384,6 +384,11 @@ No issues have been identified as of yet.
 
 ## Release Notes
 
+### 1.2.1 (August 2, 2017)
+
+#### Summary
+* Fix a small string vs. boolean bug in new dhparam code
+
 ### 1.2.0 (July 28, 2017)
 
 #### Summary
