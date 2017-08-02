@@ -229,7 +229,7 @@ define certs::site(
     $chain_name        = undef,
     $chain_path        = undef,
     $chain_source_path = undef,
-    $dhparam           = 'absent',
+    $dhparam           = false,
     $dhparam_content   = undef,
     $dhparam_file      = undef,
     $ensure            = 'present',
