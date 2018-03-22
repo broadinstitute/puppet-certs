@@ -380,6 +380,11 @@ define certs::site(
     } else {
         $service_notify = undef
     }
+    if ($_ca_path =~ /etc\/pki\/ca-trust/) {
+        $exec_notify = Exec['update_ca_trust']
+    } else {
+        $exec_notify = undef
+    }
 
     if !defined(File[$_cert_path]) {
         file { $_cert_path:
@@ -531,7 +536,7 @@ define certs::site(
             group   => $_group,
             mode    => $_cert_mode,
             require => File[$_ca_path],
-            notify  => $service_notify,
+            notify  => [$service_notify,$exec_notify],
         }
     }
 

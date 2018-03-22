@@ -175,4 +175,11 @@ class certs (
     }
 
     create_resources('certs::site', $sites)
+
+    # For nodes that have EL6/EL7-style ca trust mechanism
+    exec { 'update_ca_trust':
+      path        => '/usr/bin:/bin',
+      command     => '/usr/bin/update-ca-trust extract',
+      refreshonly => true,
+    }
 }
