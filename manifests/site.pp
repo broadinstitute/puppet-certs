@@ -370,7 +370,7 @@ define certs::site(
       target  => "${name}_cert_merged",
       source  => $cert_source,
       content => $cert_content,
-      order   => '01'
+      order   => '01',
     }
 
     if $merge_key {
@@ -378,7 +378,7 @@ define certs::site(
         target  => "${name}_cert_merged",
         source  => $key_source,
         content => $key_content,
-        order   => '02'
+        order   => '02',
       }
     }
 
@@ -388,31 +388,31 @@ define certs::site(
           target  => "${name}_cert_merged",
           source  => $chain_source,
           content => $chain_content,
-          order   => '50'
+          order   => '50',
         }
       }
     }
-  }
 
-  if ($ca_cert and !defined(File["${_ca_path}/${ca}"])) {
-    file { "${_ca_path}/${ca}":
-      ensure  => 'file',
-      source  => $ca_source,
-      content => $ca_content,
-      owner   => $_owner,
-      group   => $_group,
-      mode    => $_cert_mode,
-      require => File[$_ca_path],
-      notify  => [$service_notify,$exec_notify],
+    if ($ca_cert and !defined(File["${_ca_path}/${ca}"])) {
+      file { "${_ca_path}/${ca}":
+        ensure  => 'file',
+        source  => $ca_source,
+        content => $ca_content,
+        owner   => $_owner,
+        group   => $_group,
+        mode    => $_cert_mode,
+        require => File[$_ca_path],
+        notify  => [$service_notify,$exec_notify],
+      }
     }
-  }
 
-  if $dhparam and $merge_dhparam {
-    concat::fragment { "${cert}_dhparam":
-      target  => "${name}_cert_merged",
-      source  => $dhparam_source,
-      content => $dhparam_content,
-      order   => '95'
+    if $dhparam and $merge_dhparam {
+      concat::fragment { "${cert}_dhparam":
+        target  => "${name}_cert_merged",
+        source  => $dhparam_source,
+        content => $dhparam_content,
+        order   => '95',
+      }
     }
   } else {
     file { "${cert_path}/${cert}":
