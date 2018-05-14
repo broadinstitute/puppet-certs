@@ -304,13 +304,13 @@ define certs::site(
       $exec_notify = undef
     }
 
-    if !defined(File[$_cert_path]) {
-      file { $_cert_path:
+    if !defined(File[$cert_path]) {
+      file { $cert_path:
         ensure => 'directory',
         backup => false,
-        owner  => $_owner,
-        group  => $_group,
-        mode   => $_cert_dir_mode,
+        owner  => $owner,
+        group  => $group,
+        mode   => $cert_dir_mode,
       }
     }
   }
@@ -398,9 +398,9 @@ define certs::site(
         ensure  => 'file',
         source  => $ca_source,
         content => $ca_content,
-        owner   => $_owner,
-        group   => $_group,
-        mode    => $_cert_mode,
+        owner   => $owner,
+        group   => $group,
+        mode    => $cert_mode,
         require => File[$ca_path],
         notify  => [$service_notify,$exec_notify],
       }
