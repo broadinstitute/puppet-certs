@@ -10,7 +10,7 @@
 #
 # === Copyright
 #
-# Copyright 2016
+# Copyright 2018
 #
 # === Parameters
 #
@@ -113,28 +113,28 @@
 # Optional value: Default: {}
 #
 class certs(
-  String $cert_dir_mode,
-  String $cert_ext,
-  String $cert_mode,
-  Stdlib::Absolutepath $cert_path,
-  String $ca_ext                   = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
-  String $chain_ext                = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
-  String $group,
-  String $dhparam_file,
-  String $key_dir_mode,
-  String $key_ext,
-  String $key_mode,
-  Stdlib::Absolutepath $key_path,
-  String $owner,
-  Optional[String] $service,
-  Boolean $supported_os            = false,
-  Hash $sites                      = {}
+    String $cert_dir_mode,
+    String $cert_ext,
+    String $cert_mode,
+    Stdlib::Absolutepath $cert_path,
+    String $ca_ext                   = lookup('certs::cert_ext'),
+    Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
+    String $chain_ext                = lookup('certs::cert_ext'),
+    Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
+    String $group,
+    String $dhparam_file,
+    String $key_dir_mode,
+    String $key_ext,
+    String $key_mode,
+    Stdlib::Absolutepath $key_path,
+    String $owner,
+    Optional[String] $service,
+    Boolean $supported_os            = false,
+    Hash $sites                      = {}
 ) {
-  unless $supported_os {
-    fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")
-  }
+    unless $supported_os {
+        fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")
+    }
 
-  create_resources('certs::site', $sites)
+    create_resources('certs::site', $sites)
 }
