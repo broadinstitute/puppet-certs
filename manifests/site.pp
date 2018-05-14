@@ -209,7 +209,7 @@
 #
 # === Copyright
 #
-# Copyright 2016
+# Copyright 2018
 #
 define certs::site(
   Enum['present','absent'] $ensure    = 'present',
@@ -299,6 +299,14 @@ define certs::site(
     } else {
       $chain_source = undef
     }
+    case $ca_path {
+      /etc\/pki\/ca-trust/: {
+        $exec_notify = Exec['update_ca_trust']
+      }
+      default: {
+        $exec_notify = undef
+      }
+    }
   }
 
   if $ca_cert {
@@ -318,10 +326,13 @@ define certs::site(
     }
   }
 
-  if $service and defined(Service[$service]) {
-    $service_notify = Service[$service]
-  } else {
-    $service_notify = undef
+  case $service {
+    undef: {
+      $service_notify = undef
+    }
+    default: {
+      $service_notify = Service[$service]
+    }
   }
 
   ensure_resource('file', [$cert_path, $chain_path, $ca_path], {
@@ -357,7 +368,7 @@ define certs::site(
       target  => "${name}_cert_merged",
       source  => $cert_source,
       content => $cert_content,
-      order   => '01'
+      order   => '01',
     }
 
     if $merge_key {
@@ -365,7 +376,7 @@ define certs::site(
         target  => "${name}_cert_merged",
         source  => $key_source,
         content => $key_content,
-        order   => '02'
+        order   => '02',
       }
     }
 
@@ -375,7 +386,7 @@ define certs::site(
           target  => "${name}_cert_merged",
           source  => $chain_source,
           content => $chain_content,
-          order   => '50'
+          order   => '50',
         }
       }
       if $ca_cert {
@@ -383,7 +394,7 @@ define certs::site(
           target  => "${name}_cert_merged",
           source  => $ca_source,
           content => $ca_content,
-          order   => '90'
+          order   => '90',
         }
       }
     }
@@ -393,7 +404,7 @@ define certs::site(
         target  => "${name}_cert_merged",
         source  => $dhparam_source,
         content => $dhparam_content,
-        order   => '95'
+        order   => '95',
       }
     }
   } else {
