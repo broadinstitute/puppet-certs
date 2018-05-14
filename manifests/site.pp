@@ -212,185 +212,184 @@
 # Copyright 2018
 #
 define certs::site(
-  Enum['present','absent'] $ensure    = 'present',
-  Optional[String] $source_path       = undef,
-  Stdlib::Absolutepath $cert_path     = $::certs::cert_path,
-  String $cert_dir_mode               = $::certs::cert_dir_mode,
-  String $cert_ext                    = $::certs::cert_ext,
-  String $cert_mode                   = $::certs::cert_mode,
-  Optional[String] $cert_content      = undef,
-  Stdlib::Absolutepath $key_path      = $::certs::key_path,
-  String $key_dir_mode                = $::certs::key_dir_mode,
-  String $key_ext                     = $::certs::key_ext,
-  String $key_mode                    = $::certs::key_mode,
-  Boolean $merge_key                  = false,
-  Optional[String] $key_content       = undef,
-  Boolean $ca_cert                    = false,
-  Optional[String] $ca_name           = undef,
-  Optional[String] $ca_source_path    = $source_path,
-  Stdlib::Absolutepath $ca_path       = $::certs::ca_path,
-  String $ca_ext                      = $::certs::ca_ext,
-  Optional[String] $ca_content        = undef,
-  Boolean $cert_chain                 = false,
-  Optional[String] $chain_name        = undef,
-  Stdlib::Absolutepath $chain_path    = $::certs::chain_path,
-  String $chain_ext                   = $::certs::chain_ext,
-  Optional[String] $chain_source_path = $source_path,
-  Optional[String] $chain_content     = undef,
-  Boolean $merge_chain                = false,
-  Boolean $dhparam                    = false,
-  Optional[String] $dhparam_content   = undef,
-  String $dhparam_file                = $::certs::dhparam_file,
-  Boolean $merge_dhparam              = false,
-  Optional[String] $service           = undef,
-  String $owner                       = $::certs::owner,
-  String $group                       = $::certs::group,
+    Enum['present','absent'] $ensure    = 'present',
+    Optional[String] $source_path       = undef,
+    Stdlib::Absolutepath $cert_path     = $::certs::cert_path,
+    String $cert_dir_mode               = $::certs::cert_dir_mode,
+    String $cert_ext                    = $::certs::cert_ext,
+    String $cert_mode                   = $::certs::cert_mode,
+    Optional[String] $cert_content      = undef,
+    Stdlib::Absolutepath $key_path      = $::certs::key_path,
+    String $key_dir_mode                = $::certs::key_dir_mode,
+    String $key_ext                     = $::certs::key_ext,
+    String $key_mode                    = $::certs::key_mode,
+    Boolean $merge_key                  = false,
+    Optional[String] $key_content       = undef,
+    Boolean $ca_cert                    = false,
+    Optional[String] $ca_name           = undef,
+    Optional[String] $ca_source_path    = $source_path,
+    Stdlib::Absolutepath $ca_path       = $::certs::ca_path,
+    String $ca_ext                      = $::certs::ca_ext,
+    Optional[String] $ca_content        = undef,
+    Boolean $cert_chain                 = false,
+    Optional[String] $chain_name        = undef,
+    Stdlib::Absolutepath $chain_path    = $::certs::chain_path,
+    String $chain_ext                   = $::certs::chain_ext,
+    Optional[String] $chain_source_path = $source_path,
+    Optional[String] $chain_content     = undef,
+    Boolean $merge_chain                = false,
+    Boolean $dhparam                    = false,
+    Optional[String] $dhparam_content   = undef,
+    String $dhparam_file                = $::certs::dhparam_file,
+    Boolean $merge_dhparam              = false,
+    Optional[String] $service           = undef,
+    String $owner                       = $::certs::owner,
+    String $group                       = $::certs::group,
 ) {
   # The base class must be included first because it is used by parameter defaults
-  unless defined(Class['certs']) {
-    fail('You must include the certs base class before using any certs defined resources')
-  }
-
-  if ($source_path == undef and ($cert_content == undef or $key_content == undef)) {
-    fail('You must provide a source_path or cert_content/key_content combination for the SSL files to certs::site.')
-  }
-
-  if ($source_path and ($cert_content or $key_content)) {
-    fail('You can only provide $source_path or $cert_content/$key_content, not both.')
-  }
-
-  unless $source_path {
-    unless($cert_content and $key_content) {
-      fail('If source_path is not set, $cert_content and $key_content must both be set.')
+    unless defined(Class['certs']) {
+        fail('You must include the certs base class before using any certs defined resources')
     }
+
+    if ($source_path == undef and ($cert_content == undef or $key_content == undef)) {
+        fail('You must provide a source_path or cert_content/key_content combination for the SSL files to certs::site.')
+    }
+
+    if ($source_path and ($cert_content or $key_content)) {
+        fail('You can only provide $source_path or $cert_content/$key_content, not both.')
+    }
+
+    unless $source_path {
+        unless($cert_content and $key_content) {
+            fail('If source_path is not set, $cert_content and $key_content must both be set.')
+        }
+    }
+
+    $cert = "${name}${cert_ext}"
+    $key  = "${name}${key_ext}"
+
+    case $source_path {
+        undef: {
+            $cert_source = undef
+            $key_source = undef
+        }
+        default: {
+          $cert_source = "${source_path}/${cert}"
+          $key_source  = "${source_path}/${key}"
+        }
+    }
+
+    $dhparam_source = $dhparam_content ? {
+        undef   => "${source_path}/${dhparam_file}",
+        default => undef,
+    }
+
+    if $cert_chain {
+        if ($chain_name == undef) {
+            fail('You must provide a chain_name value for the cert chain to certs::site.')
+        }
+        $chain = "${chain_name}${chain_ext}"
+
+        if $chain_content == undef {
+            if ($chain_source_path == undef) {
+                fail('You must provide a chain_source_path for the SSL files to certs::site.')
+            }
+            $chain_source = "${chain_source_path}/${chain}"
+        } else {
+            $service_notify = undef
+        }
+        if ($_ca_path =~ /etc\/pki\/ca-trust/) {
+            $exec_notify = Exec['update_ca_trust']
+        } else {
+            $exec_notify = undef
+        }
+
+        if !defined(File[$_cert_path]) {
+            file { $_cert_path:
+                ensure => 'directory',
+                backup => false,
+                owner  => $_owner,
+                group  => $_group,
+                mode   => $_cert_dir_mode,
+            }
+        }
   }
 
-  $cert = "${name}${cert_ext}"
-  $key  = "${name}${key_ext}"
+    if $ca_cert {
+        if ($ca_name == undef) {
+            fail('You must provide a ca_name value for the CA cert to certs::site.')
+        }
+        $ca = "${ca_name}${ca_ext}"
 
-  case $source_path {
-    undef: {
-      $cert_source = undef
-      $key_source = undef
+        if $ca_content == undef {
+            if ($ca_source_path == undef) {
+                fail('You must provide a ca_source_path for the SSL files to certs::site.')
+            }
+            $ca_source = "${ca_source_path}/${ca}"
+        } else {
+            $ca_source = undef
+        }
     }
-    default: {
-      $cert_source = "${source_path}/${cert}"
-      $key_source  = "${source_path}/${key}"
-    }
-  }
 
-  $dhparam_source = $dhparam_content ? {
-    undef   => "${source_path}/${dhparam_file}",
-    default => undef,
-  }
-
-  if $cert_chain {
-    if ($chain_name == undef) {
-      fail('You must provide a chain_name value for the cert chain to certs::site.')
-    }
-    $chain = "${chain_name}${chain_ext}"
-
-    if $chain_content == undef {
-      if ($chain_source_path == undef) {
-        fail('You must provide a chain_source_path for the SSL files to certs::site.')
-      }
-
-      $chain_source = "${chain_source_path}/${chain}"
+    if $service and defined(Service[$service]) {
+        $service_notify = Service[$service]
     } else {
         $service_notify = undef
     }
-    if ($_ca_path =~ /etc\/pki\/ca-trust/) {
-        $exec_notify = Exec['update_ca_trust']
-    } else {
-        $exec_notify = undef
-    }
 
-    if !defined(File[$_cert_path]) {
-        file { $_cert_path:
-            ensure => 'directory',
-            backup => false,
-            owner  => $_owner,
-            group  => $_group,
-            mode   => $_cert_dir_mode,
-        }
-    }
-  }
+    ensure_resource('file', [$cert_path, $chain_path, $ca_path], {
+        ensure => 'directory',
+        backup => false,
+        owner  => $owner,
+        group  => $group,
+        mode   => $cert_dir_mode,
+    })
 
-  if $ca_cert {
-    if ($ca_name == undef) {
-      fail('You must provide a ca_name value for the CA cert to certs::site.')
-    }
-    $ca = "${ca_name}${ca_ext}"
-
-    if $ca_content == undef {
-      if ($ca_source_path == undef) {
-        fail('You must provide a ca_source_path for the SSL files to certs::site.')
-      }
-
-      $ca_source = "${ca_source_path}/${ca}"
-    } else {
-      $ca_source = undef
-    }
-  }
-
-  if $service and defined(Service[$service]) {
-    $service_notify = Service[$service]
-  } else {
-    $service_notify = undef
-  }
-
-  ensure_resource('file', [$cert_path, $chain_path, $ca_path], {
-    ensure => 'directory',
-    backup => false,
-    owner  => $owner,
-    group  => $group,
-    mode   => $cert_dir_mode,
-  })
-
-  ensure_resource('file', $key_path, {
-    ensure => 'directory',
-    backup => false,
-    owner  => $owner,
-    group  => $group,
-    mode   => $key_dir_mode,
-  })
+    ensure_resource('file', $key_path, {
+        ensure => 'directory',
+        backup => false,
+        owner  => $owner,
+        group  => $group,
+        mode   => $key_dir_mode,
+    })
 
   if $merge_chain or $merge_key or $merge_dhparam {
-    concat { "${name}_cert_merged":
-        ensure         => $ensure,
-        ensure_newline => true,
-        backup         => false,
-        path           => "${cert_path}/${cert}",
-        owner          => $owner,
-        group          => $group,
-        mode           => $cert_mode,
-        require        => File[$cert_path],
-        notify         => $service_notify,
-    }
+        concat { "${name}_cert_merged":
+            ensure         => $ensure,
+            ensure_newline => true,
+            backup         => false,
+            path           => "${cert_path}/${cert}",
+            owner          => $owner,
+            group          => $group,
+            mode           => $cert_mode,
+            require        => File[$cert_path],
+            notify         => $service_notify,
+        }
 
-    concat::fragment { "${cert}_certificate":
-      target  => "${name}_cert_merged",
-      source  => $cert_source,
-      content => $cert_content,
-      order   => '01'
-    }
+        concat::fragment { "${cert}_certificate":
+            target  => "${name}_cert_merged",
+            source  => $cert_source,
+            content => $cert_content,
+            order   => '01'
+        }
 
-    if $merge_key {
-      concat::fragment { "${cert}_key":
-        target  => "${name}_cert_merged",
-        source  => $key_source,
-        content => $key_content,
-        order   => '02'
-      }
+        if $merge_key {
+            concat::fragment { "${cert}_key":
+                target  => "${name}_cert_merged",
+                source  => $key_source,
+                content => $key_content,
+                order   => '02'
+        }
     }
 
     if $merge_chain {
-      if $cert_chain {
-        concat::fragment { "${cert}_chain":
-          target  => "${name}_cert_merged",
-          source  => $chain_source,
-          content => $chain_content,
-          order   => '50'
+        if $cert_chain {
+            concat::fragment { "${cert}_chain":
+                target  => "${name}_cert_merged",
+                source  => $chain_source,
+                content => $chain_content,
+                order   => '50'
+            }
         }
     }
 
@@ -408,73 +407,72 @@ define certs::site(
     }
 
     if $dhparam and $merge_dhparam {
-      concat::fragment { "${cert}_dhparam":
-        target  => "${name}_cert_merged",
-        source  => $dhparam_source,
-        content => $dhparam_content,
-        order   => '95'
-      }
-    }
-  } else {
-    file { "${cert_path}/${cert}":
+        concat::fragment { "${cert}_dhparam":
+            target  => "${name}_cert_merged",
+            source  => $dhparam_source,
+            content => $dhparam_content,
+            order   => '95'
+        }
+    } else {
+        file { "${cert_path}/${cert}":
+            ensure  => $ensure,
+            source  => $cert_source,
+            content => $cert_content,
+            owner   => $owner,
+            group   => $group,
+            mode    => $cert_mode,
+            require => File[$cert_path],
+            notify  => $service_notify,
+        }
+  }
+
+    file { "${key_path}/${key}":
         ensure  => $ensure,
-        source  => $cert_source,
-        content => $cert_content,
+        source  => $key_source,
+        content => $key_content,
         owner   => $owner,
         group   => $group,
-        mode    => $cert_mode,
-        require => File[$cert_path],
+        mode    => $key_mode,
+        require => File[$key_path],
         notify  => $service_notify,
     }
-  }
 
-  file { "${key_path}/${key}":
-    ensure  => $ensure,
-    source  => $key_source,
-    content => $key_content,
-    owner   => $owner,
-    group   => $group,
-    mode    => $key_mode,
-    require => File[$key_path],
-    notify  => $service_notify,
-  }
+    if ($cert_chain) {
+        ensure_resource('file', "${chain_path}/${chain}", {
+            ensure  => 'file',
+            source  => $chain_source,
+            content => $chain_content,
+            owner   => $owner,
+            group   => $group,
+            mode    => $cert_mode,
+            require => File[$chain_path],
+            notify  => $service_notify,
+        })
+    }
 
-  if ($cert_chain) {
-    ensure_resource('file', "${chain_path}/${chain}", {
-      ensure  => 'file',
-      source  => $chain_source,
-      content => $chain_content,
-      owner   => $owner,
-      group   => $group,
-      mode    => $cert_mode,
-      require => File[$chain_path],
-      notify  => $service_notify,
-    })
-  }
+    if ($ca_cert) {
+        ensure_resource('file', "${ca_path}/${ca}", {
+            ensure  => 'file',
+            source  => $ca_source,
+            content => $ca_content,
+            owner   => $owner,
+            group   => $group,
+            mode    => $cert_mode,
+            require => File[$ca_path],
+            notify  => $service_notify,
+        })
+    }
 
-  if ($ca_cert) {
-    ensure_resource('file', "${ca_path}/${ca}", {
-      ensure  => 'file',
-      source  => $ca_source,
-      content => $ca_content,
-      owner   => $owner,
-      group   => $group,
-      mode    => $cert_mode,
-      require => File[$ca_path],
-      notify  => $service_notify,
-    })
-  }
-
-  if ($dhparam) {
-    ensure_resource('file', "${cert_path}/${name}_${dhparam_file}", {
-      ensure  => $ensure,
-      source  => $dhparam_source,
-      content => $dhparam_content,
-      owner   => $owner,
-      group   => $group,
-      mode    => $cert_mode,
-      require => File[$cert_path],
-      notify  => $service_notify,
-    })
-  }
+    if ($dhparam) {
+        ensure_resource('file', "${cert_path}/${name}_${dhparam_file}", {
+            ensure  => $ensure,
+            source  => $dhparam_source,
+            content => $dhparam_content,
+            owner   => $owner,
+            group   => $group,
+            mode    => $cert_mode,
+            require => File[$cert_path],
+            notify  => $service_notify,
+        })
+    }
 }
