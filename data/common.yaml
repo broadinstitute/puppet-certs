@@ -1,0 +1,10 @@
+---
+certs::supported_os: false
+certs::cert_dir_mode: '0755'
+certs::cert_ext: '.crt'
+certs::cert_mode: '0644'
+certs::dhparam_file: 'dh2048.pem'
+certs::key_dir_mode: '0755'
+certs::key_ext: '.key'
+certs::key_mode: '0600'
+certs::owner: 'root'

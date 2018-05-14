@@ -10,7 +10,7 @@
 #
 # === Copyright
 #
-# Copyright 2016
+# Copyright 2018
 #
 # === Parameters
 #
@@ -112,66 +112,28 @@
 # A hash of certs::site configurations, typically provided by Hiera.
 # Optional value: Default: {}
 #
-class certs (
-    $ca_ext        = undef,
-    $ca_path       = undef,
-    $cert_dir_mode = undef,
-    $cert_ext      = undef,
-    $cert_mode     = undef,
-    $cert_path     = undef,
-    $chain_ext     = undef,
-    $chain_path    = undef,
-    $dhparam_file  = undef,
-    $group         = undef,
-    $key_dir_mode  = undef,
-    $key_ext       = undef,
-    $key_mode      = undef,
-    $key_path      = undef,
-    $owner         = undef,
-    $service       = undef,
-    $sites         = lookup('certs::sites', Hash, 'deep', {}),
+class certs(
+    String $cert_dir_mode,
+    String $cert_ext,
+    String $cert_mode,
+    Stdlib::Absolutepath $cert_path,
+    String $ca_ext                   = lookup('certs::cert_ext'),
+    Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
+    String $chain_ext                = lookup('certs::cert_ext'),
+    Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
+    String $group,
+    String $dhparam_file,
+    String $key_dir_mode,
+    String $key_ext,
+    String $key_mode,
+    Stdlib::Absolutepath $key_path,
+    String $owner,
+    Optional[String] $service,
+    Boolean $supported_os            = false,
+    Hash $sites                      = {}
 ) {
-
-    include ::certs::params
-
-    $_ca_ext        = pick_default($ca_ext, $::certs::params::ca_ext)
-    $_ca_path       = pick_default($ca_path, $::certs::params::ca_path)
-    $_cert_dir_mode = pick_default($cert_dir_mode, $::certs::params::cert_dir_mode)
-    $_cert_ext      = pick_default($cert_ext, $::certs::params::cert_ext)
-    $_cert_mode     = pick_default($cert_mode, $::certs::params::cert_mode)
-    $_cert_path     = pick_default($cert_path, $::certs::params::cert_path)
-    $_chain_ext     = pick_default($chain_ext, $::certs::params::chain_ext)
-    $_chain_path    = pick_default($chain_path, $::certs::params::chain_path)
-    $_dhparam_file  = pick_default($dhparam_file, $::certs::params::dhparam_file)
-    $_group         = pick_default($group, $::certs::params::group)
-    $_key_dir_mode  = pick_default($key_dir_mode, $::certs::params::key_dir_mode)
-    $_key_ext       = pick_default($key_ext, $::certs::params::key_ext)
-    $_key_mode      = pick_default($key_mode, $::certs::params::key_mode)
-    $_key_path      = pick_default($key_path, $::certs::params::key_path)
-    $_owner         = pick_default($owner, $::certs::params::owner)
-    $_service       = pick_default($service, $::certs::params::service)
-
-    validate_string($_ca_ext)
-    validate_absolute_path($_ca_path)
-    validate_string($_cert_dir_mode)
-    validate_numeric($_cert_dir_mode)
-    validate_string($_cert_ext)
-    validate_string($_cert_mode)
-    validate_numeric($_cert_mode)
-    validate_absolute_path($_cert_path)
-    validate_string($_chain_ext)
-    validate_absolute_path($_chain_path)
-    validate_string($_group)
-    validate_string($_key_dir_mode)
-    validate_numeric($_key_dir_mode)
-    validate_string($_key_ext)
-    validate_string($_key_mode)
-    validate_numeric($_key_mode)
-    validate_absolute_path($_key_path)
-    validate_string($_owner)
-
-    if $service != undef {
-        validate_string($service)
+    unless $supported_os {
+        fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")
     }
 
     create_resources('certs::site', $sites)
