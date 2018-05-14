@@ -129,7 +129,7 @@ class certs (
     $key_path      = undef,
     $owner         = undef,
     $service       = undef,
-    $sites         = hiera_hash('certs::sites', {}),
+    $sites         = lookup('certs::sites', Hash, 'deep', {}),
 ) {
 
     include ::certs::params
