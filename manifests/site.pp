@@ -297,22 +297,15 @@ define certs::site(
 
       $chain_source = "${chain_source_path}/${chain}"
     } else {
-        $service_notify = undef
+        $chain_source = undef
     }
-    if ($ca_path =~ /etc\/pki\/ca-trust/) {
+    case $ca_path {
+      /etc\/pki\/ca-trust/: {
         $exec_notify = Exec['update_ca_trust']
-    } else {
+      }
+      default: {
         $exec_notify = undef
-    }
-
-    if !defined(File[$cert_path]) {
-        file { $cert_path:
-            ensure => 'directory',
-            backup => false,
-            owner  => $owner,
-            group  => $group,
-            mode   => $cert_dir_mode,
-        }
+      }
     }
   }
 
@@ -333,10 +326,13 @@ define certs::site(
     }
   }
 
-  if $service and defined(Service[$service]) {
-    $service_notify = Service[$service]
-  } else {
-    $service_notify = undef
+  case $service {
+    undef: {
+      $service_notify = undef
+    }
+    default: {
+      $service_notify = Service[$service]
+    }
   }
 
   ensure_resource('file', [$cert_path, $chain_path, $ca_path], {
@@ -392,18 +388,13 @@ define certs::site(
           content => $chain_content,
           order   => '50',
         }
-    }
-
-    if ($ca_cert and !defined(File["${ca_path}/${ca}"])) {
-        file { "${ca_path}/${ca}":
-            ensure  => 'file',
-            source  => $ca_source,
-            content => $ca_content,
-            owner   => $owner,
-            group   => $group,
-            mode    => $cert_mode,
-            require => File[$ca_path],
-            notify  => [$service_notify,$exec_notify],
+      }
+      if $ca_cert {
+        concat::fragment { "${cert}_ca":
+          target  => "${name}_cert_merged",
+          source  => $ca_source,
+          content => $ca_content,
+          order   => '90',
         }
       }
     }
