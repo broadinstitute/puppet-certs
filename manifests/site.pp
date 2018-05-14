@@ -297,7 +297,7 @@ define certs::site(
 
       $chain_source = "${chain_source_path}/${chain}"
     } else {
-        $chain_source = undef
+      $chain_source = undef
     }
     case $ca_path {
       /etc\/pki\/ca-trust/: {
