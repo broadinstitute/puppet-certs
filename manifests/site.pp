@@ -313,7 +313,7 @@ define certs::site(
                 mode   => $_cert_dir_mode,
             }
         }
-  }
+    }
 
     if $ca_cert {
         if ($ca_name == undef) {
@@ -353,7 +353,7 @@ define certs::site(
         mode   => $key_dir_mode,
     })
 
-  if $merge_chain or $merge_key or $merge_dhparam {
+    if $merge_chain or $merge_key or $merge_dhparam {
         concat { "${name}_cert_merged":
             ensure         => $ensure,
             ensure_newline => true,
@@ -379,30 +379,31 @@ define certs::site(
                 source  => $key_source,
                 content => $key_content,
                 order   => '02'
-        }
-    }
-
-    if $merge_chain {
-        if $cert_chain {
-            concat::fragment { "${cert}_chain":
-                target  => "${name}_cert_merged",
-                source  => $chain_source,
-                content => $chain_content,
-                order   => '50'
             }
         }
-    }
 
-    if ($ca_cert and !defined(File["${_ca_path}/${ca}"])) {
-        file { "${_ca_path}/${ca}":
-            ensure  => 'file',
-            source  => $ca_source,
-            content => $ca_content,
-            owner   => $_owner,
-            group   => $_group,
-            mode    => $_cert_mode,
-            require => File[$_ca_path],
-            notify  => [$service_notify,$exec_notify],
+        if $merge_chain {
+            if $cert_chain {
+                concat::fragment { "${cert}_chain":
+                    target  => "${name}_cert_merged",
+                    source  => $chain_source,
+                    content => $chain_content,
+                    order   => '50'
+                }
+            }
+        }
+
+        if ($ca_cert and !defined(File["${_ca_path}/${ca}"])) {
+            file { "${_ca_path}/${ca}":
+                ensure  => 'file',
+                source  => $ca_source,
+                content => $ca_content,
+                owner   => $_owner,
+                group   => $_group,
+                mode    => $_cert_mode,
+                require => File[$_ca_path],
+                notify  => [$service_notify,$exec_notify],
+            }
         }
     }
 
@@ -424,7 +425,7 @@ define certs::site(
             require => File[$cert_path],
             notify  => $service_notify,
         }
-  }
+    }
 
     file { "${key_path}/${key}":
         ensure  => $ensure,
