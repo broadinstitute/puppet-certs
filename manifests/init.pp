@@ -14,32 +14,32 @@
 #
 # === Parameters
 #
-# [ca_ext]
+# [*ca_ext*]
 # The extension of the CA certificate file.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: crt.
 #
-# [ca_path]
+# [*ca_path*]
 # Location where the CA certificate file will be stored on the managed node.
 # This sets the default globally for use by all certs::site resources.
-# Optional value. Default: [cert_path].
+# Optional value. Default: [*cert_path*].
 #
-# [cert_dir_mode]
+# [*cert_dir_mode*]
 # Permissions of the certificate directory.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: '0755'.
 #
-# [cert_ext]
+# [*cert_ext*]
 # The extension of the certificate file.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: '.crt'.
 #
-# [cert_mode]
+# [*cert_mode*]
 # Permissions of the certificate files.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: '0644'.
 #
-# [cert_path]
+# [*cert_path*]
 # Location where the certificate files will be stored on the managed node.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Defaults:
@@ -48,44 +48,44 @@
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
 #
-# [chain_ext]
+# [*chain_ext*]
 # The extension of the certificate chain file.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: crt.
 #
-# [chain_path]
+# [*chain_path*]
 # Location where the certificate chain file will be stored on the managed node.
 # This sets the default globally for use by all certs::site resources.
-# Optional value. Default: [cert_path].
+# Optional value. Default: [*cert_path*].
 #
-# [dhparam_file]
+# [*dhparam_file*]
 # The name of the dhparam file.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: 'dh2048.pem'.
 #
-# [group]
+# [*group*]
 # Name of the group owner of the certificates.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Defaults:
 #   - 'root' for Redhat-based, Debian-based, and Suse-based systems
 #   - 'wheel' for FreeBSD and Gentoo-based systems
 #
-# [key_dir_mode]
+# [*key_dir_mode*]
 # Permissions of the private keys directory.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: '0755'.
 #
-# [key_ext]
+# [*key_ext*]
 # The extension of the private key file.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: '.key'.
 #
-# [key_mode]
+# [*key_mode*]
 # Permissions of the private keys.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: '0600'.
 #
-# [key_path]
+# [*key_path*]
 # Location where the private keys will be stored on the managed node.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Defaults:
@@ -94,12 +94,12 @@
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
 #
-# [owner]
+# [*owner*]
 # Name of the owner of the certificates.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: 'root'.
 #
-# [service]
+# [*service*]
 # Name of the server service to notify when certificates are updated.
 # Setting to `undef` will disable service notifications.
 # This sets the default globally for use by all certs::site resources.
@@ -108,26 +108,30 @@
 #   - 'apache2' for Debian-based, Suse-based, and Gentoo-based systems
 #   - 'apache24' for FreeBSD-based systems
 #
-# [sites]
+# [*sites*]
 # A hash of certs::site configurations, typically provided by Hiera.
 # Optional value: Default: {}
 #
+# [*supported_os*]
+# A boolean value for whether or not the running OS is supported by the module.
+# Configured by default data.
+#
 class certs(
+    Stdlib::Absolutepath $cert_path,
+    Stdlib::Absolutepath $key_path,
     String $cert_dir_mode,
     String $cert_ext,
     String $cert_mode,
-    Stdlib::Absolutepath $cert_path,
+    String $dhparam_file,
+    String $group,
+    String $key_dir_mode,
+    String $key_ext,
+    String $key_mode,
+    String $owner,
     String $ca_ext                   = lookup('certs::cert_ext'),
     Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
     String $chain_ext                = lookup('certs::cert_ext'),
     Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
-    String $group,
-    String $dhparam_file,
-    String $key_dir_mode,
-    String $key_ext,
-    String $key_mode,
-    Stdlib::Absolutepath $key_path,
-    String $owner,
     Optional[String] $service,
     Boolean $supported_os            = false,
     Hash $sites                      = {}

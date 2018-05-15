@@ -2,5 +2,5 @@
 certs::cert_path: '/etc/pki/tls/certs'
 certs::key_path: '/etc/pki/tls/private'
 certs::service: 'httpd'
-certs::group : 'root'
+certs::group: 'root'
 certs::supported_os: true
