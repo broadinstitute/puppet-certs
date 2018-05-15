@@ -9,54 +9,54 @@
 #
 # === Parameters
 #
-# [ca_cert]
+# [*ca_cert*]
 # Boolean for whether to look for a CA certificate file.
 # Optional value. Default: false.
 #
-# [ca_content]
+# [*ca_content*]
 # A string representing the contents of the CA file.
 # Optional value. Default: undef.
 #
-# [ca_ext]
+# [*ca_ext*]
 # The extension of the CA certificate file.
 # Optional value. Default: crt.
 #
-# [ca_name]
+# [*ca_name*]
 # The name of the CA certificate file.
 # Optional value. Default: undef.
 #
-# [ca_path]
+# [*ca_path*]
 # Location where the CA certificate file will be stored on the managed node.
-# Optional value. Default: [cert_path].
+# Optional value. Default: [*cert_path*].
 #
-# [ca_source_path]
+# [*ca_source_path*]
 # The location of the CA certificate file. Typically references a module's files.
 # e.g. 'puppet:///ca_certs' will search for the mount point defined in the
 # fileserver.conf on the Puppet Server for the specified files.
-# Optional value. Default: [source_path].
+# Optional value. Default: [*source_path*].
 #
-# [cert_chain]
+# [*cert_chain*]
 # Boolean for whether to look for a certificate chain file.
 # Optional value. Default: false.
 #
-# [cert_content]
+# [*cert_content*]
 # A string representing the contents of the certificate file.  This can only be
 # provided if $source_path is undefined or an error will occur.
 # Optional value. Default: undef.
 #
-# [cert_dir_mode]
+# [*cert_dir_mode*]
 # Permissions of the certificate directory.
 # Optional value. Default: '0755'.
 #
-# [cert_ext]
+# [*cert_ext*]
 # The extension of the certificate file.
 # Optional value. Default: '.crt'.
 #
-# [cert_mode]
+# [*cert_mode*]
 # Permissions of the certificate files.
 # Optional value. Default: '0644'.
 #
-# [cert_path]
+# [*cert_path*]
 # Location where the certificate files will be stored on the managed node.
 # Optional value. Defaults:
 #   - '/etc/pki/tls/certs' on RedHat-based systems
@@ -64,73 +64,73 @@
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
 #
-# [chain_content]
+# [*chain_content*]
 # A string representing the contents of the chain file.
 # Optional value. Default: undef.
 #
-# [chain_ext]
+# [*chain_ext*]
 # The extension of the certificate chain file.
 # Optional value. Default: crt.
 #
-# [chain_name]
+# [*chain_name*]
 # The name of the certificate chain file.
 # Optional value. Default: undef.
 #
-# [chain_path]
+# [*chain_path*]
 # Location where the certificate chain file will be stored on the managed node.
-# Optional value. Default: [cert_path].
+# Optional value. Default: [*cert_path*].
 #
-# [chain_source_path]
+# [*chain_source_path*]
 # The location of the certificate chain file. Typically references a module's files.
 # e.g. 'puppet:///chain_certs' will search for the mount point defined in the
 # fileserver.conf on the Puppet Server for the specified files.
-# Optional value. Default: [source_path].
+# Optional value. Default: [*source_path*].
 #
-# [dhparam]
+# [*dhparam*]
 # A boolean value to determine whether a dhparam file should be placed on the
 # system along with the other certificate files.  The dhparam file will need to
 # exist on the source side just as with the other certificate files in order
 # for the file to be delivered.
 # Optional value. Default: false
 #
-# [dhparam_content]
+# [*dhparam_content*]
 # A string representing the contents of the dhparam file.  This option will
 # take precedence over dhparam_file if it exists on the source side.
 # Optional value. Default: undef.
 #
-# [dhparam_file]
+# [*dhparam_file*]
 # The name of the dhparam file.
 # Optional value. Default: 'dh2048.pem'.
 #
-# [ensure]
+# [*ensure*]
 # Ensure for the site resources.  If 'present', files will be put in place.  If
 # 'absent', files will be removed.
 # Optional value. Default: 'present'
 #
-# [group]
+# [*group*]
 # Name of the group owner of the certificates.
 # Optional value. Defaults:
 #   - 'root' for Redhat-based, Debian-based, and Suse-based systems
 #   - 'wheel' for FreeBSD and Gentoo-based systems
 #
-# [key_content]
+# [*key_content*]
 # A string representing the contents of the key file.  This can only be
 # provided if $source_path is undefined or an error will occur.
 # Optional value. Default: undef.
 #
-# [key_dir_mode]
+# [*key_dir_mode*]
 # Permissions of the private keys directory.
 # Optional value. Default: '0755'.
 #
-# [key_ext]
+# [*key_ext*]
 # The extension of the private key file.
 # Optional value. Default: '.key'.
 #
-# [key_mode]
+# [*key_mode*]
 # Permissions of the private keys.
 # Optional value. Default: '0600'.
 #
-# [key_path]
+# [*key_path*]
 # Location where the private keys will be stored on the managed node.
 # Optional value. Defaults:
 #   - '/etc/pki/tls/private' on RedHat-based systems
@@ -138,26 +138,26 @@
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
 #
-# [merge_chain]
+# [*merge_chain*]
 # Option to merge the CA and chain files into the actual certificate file,
 # which is required by some software.
 # Optional value. Default: false.
 #
-# [merge_dhparam]
+# [*merge_dhparam*]
 # Option to merge the DH paramaters file into the actual certificate file,
 # which is required by some software.
 # Optional value. Default: false.
 #
-# [merge_key]
+# [*merge_key*]
 # Option to merge the private into the actual certificate file, which is
 # required by some software.
 # Optional value. Default: false.
 #
-# [owner]
+# [*owner*]
 # Name of the owner of the certificates.
 # Optional value. Default: 'root'.
 #
-# [service]
+# [*service*]
 # Name of the server service to notify when certificates are updated.
 # Setting to `undef` will disable service notifications.
 # Optional value. Defaults:
@@ -165,7 +165,7 @@
 #   - 'apache2' for Debian-based, Suse-based, and Gentoo-based systems
 #   - 'apache24' for FreeBSD-based systems
 #
-# [source_path]
+# [*source_path*]
 # The location of the certificate files. Typically references a module's files.
 # e.g. 'puppet:///site_certs' will search for the mount point defined in the
 # fileserver.conf on the Puppet Server for the specified files.
