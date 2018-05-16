@@ -1,3 +1,8 @@
+## Release 2.1.1 (May 16, 2018)
+
+### Summary
+* Minor fix for lint
+
 ## Release 2.1.0 (May 16, 2018)
 
 ### Summary
