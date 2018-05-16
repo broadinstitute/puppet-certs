@@ -16,8 +16,7 @@
     * [Examples](#examples)
 5. [Reference](#reference)
 6. [Limitations - OS compatibility, etc.](#limitations)
-7. [Release Notes](#release-notes)
-8. [Contributors](#contributors)
+7. [Contributors](#contributors)
 
 ## Overview
 Configures SSL certificates and keys.
@@ -375,54 +374,10 @@ e.g. *'puppet:///site_certs'* will search for the mount point defined in `filese
 ## Limitations
 
 This module is CI tested against [open source Puppet](https://docs.puppetlabs.com/puppet) on:
-- CentOS 5, 6, and 7
-- RHEL 5, 6, and 7
+- CentOS 6 and 7
+- RHEL 6 and 7
 
 This module also provides functions for other distributions and operating systems, such as FreeBSD and Gentoo, but is not formally tested on them and are subject to regressions.
-
-No issues have been identified as of yet.
-
-## Release Notes
-
-### 1.2.1 (August 2, 2017)
-
-#### Summary
-* Fix a small string vs. boolean bug in new dhparam code
-
-### 1.2.0 (July 28, 2017)
-
-#### Summary
-* Introducing an option to add a Diffie-Helman parameters file, including the ability to merge the file with the certificate file if necessary.
-* Many more and expanded spec tests, along with spec test cleanup
-
-### 1.1.0 (January 17, 2017)
-
-#### Summary
-* Introducing an option to merge the private key into certificates for services that require it
-* Update spec replacing `should` with `is_expected.to` for all tests
-
-#### Features
-* The `merge_key` parameter has been added to support merging private keys with certificates when required.
-
-### 1.0.0 (September 6, 2016)
-
-#### Summary
-* Introducing new features, primarily an option to merge certificates for services that require it
-* Adding Vagrant support for testing using Puppet 4
-* Travis configuration fixes
-* Rewriting parameters for the module
-* Adding spec tests
-
-#### Features
-* The `cert_dir_mode`, `key_dir_mode`, and `merge_chain` parameters have been added to support directory modes for certificates and keys and to also merge certificates when required.
-
-#### Changes
-* Module parameters are now capable of being defined globally in the base class.
-
-### 0.4.0 (August 17, 2016)
-
-#### Summary
-Initial release
 
 ## Contributors
 

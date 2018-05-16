@@ -207,10 +207,6 @@
 # Riccardo Calixte <rcalixte@broadinstitute.org>
 # Andrew Teixeira <teixeira@broadinstitute.org>
 #
-# === Copyright
-#
-# Copyright 2018
-#
 define certs::site(
   Enum['present','absent'] $ensure    = 'present',
   Optional[String] $source_path       = undef,

@@ -13,6 +13,7 @@ gem 'rake'
 gem 'requests'
 gem 'rspec'
 gem 'rspec-puppet'
+gem 'rspec-puppet-utils'
 
 group :development do
   gem 'librarian-puppet', :require => false
