@@ -10,10 +10,10 @@
 1. [Overview](#overview)
 2. [Module Description](#module-description)
 3. [Setup](#setup)
-    * [Setup requirements](#setup-requirements)
+  * [Setup requirements](#setup-requirements)
 4. [Usage](#usage)
-    * [Installation](#installation)
-    * [Examples](#examples)
+  * [Installation](#installation)
+  * [Examples](#examples)
 5. [Reference](#reference)
 6. [Limitations - OS compatibility, etc.](#limitations)
 7. [Contributors](#contributors)
@@ -37,24 +37,24 @@ Once a file store is determined, include at least one certs::site define and spe
 
 By default, this module will place certificates and keys in their relative locations and restart the specified service, provided it is defined in the catalog.
 - **RedHat**
- * certificates directory: `/etc/pki/tls/certs`
- * keys directory: `/etc/pki/tls/private`
- * service: `httpd`
+  * certificates directory: `/etc/pki/tls/certs`
+  * keys directory: `/etc/pki/tls/private`
+  * service: `httpd`
 
 - **Debian & Suse**
- * certificates directory: `/etc/ssl/certs`
- * keys directory: `/etc/ssl/private`
- * service: `apache2`
+  * certificates directory: `/etc/ssl/certs`
+  * keys directory: `/etc/ssl/private`
+  * service: `apache2`
 
 - **FreeBSD**
- * certificates directory: `/usr/local/etc/apache24`
- * keys directory: `/usr/local/etc/apache24`
- * service: `apache24`
+  * certificates directory: `/usr/local/etc/apache24`
+  * keys directory: `/usr/local/etc/apache24`
+  * service: `apache24`
 
 - **Gentoo**
- * certificates directory: `/etc/ssl/apache2`
- * keys directory: `/etc/ssl/apache2`
- * service: `apache2`
+  * certificates directory: `/etc/ssl/apache2`
+  * keys directory: `/etc/ssl/apache2`
+  * service: `apache2`
 
 ## Usage
 
@@ -80,8 +80,8 @@ Examples
 
 **Puppet Manifest:**
 
-    manifest.pp
-    -----------
+  manifest.pp
+  -----------
 ~~~
   include certs
   $domain = 'www.example.com'
@@ -95,8 +95,8 @@ Examples
 
 **With Hiera:**
 
-    node.yaml
-    ---------
+  node.yaml
+  ---------
 ~~~
   classes:
     - certs
@@ -110,8 +110,8 @@ Examples
 
 **Resource Chaining with Apache Module:**
 
-    manifest.pp
-    -----------
+  manifest.pp
+  -----------
 ~~~
   Certs::Site<| |> -> Apache::Vhost<| |>
 ~~~

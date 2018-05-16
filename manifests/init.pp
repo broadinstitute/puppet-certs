@@ -112,36 +112,42 @@
 # A boolean value for whether or not the running OS is supported by the module.
 # Configured by default data.
 #
+# [*validate_x509*]
+# A boolean value to determine whether or not to validate the certificate and key pairs.
+# Failure will cause the service not to restart.
+# Optional value. Default: true.
+#
 class certs(
-    Stdlib::Absolutepath $cert_path,
-    Stdlib::Absolutepath $key_path,
-    String $cert_dir_mode,
-    String $cert_ext,
-    String $cert_mode,
-    String $dhparam_file,
-    String $group,
-    String $key_dir_mode,
-    String $key_ext,
-    String $key_mode,
-    String $owner,
-    String $ca_ext                   = lookup('certs::cert_ext'),
-    Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
-    String $chain_ext                = lookup('certs::cert_ext'),
-    Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
-    Optional[String] $service,
-    Boolean $supported_os            = false,
-    Hash $sites                      = {}
+  Stdlib::Absolutepath $cert_path,
+  Stdlib::Absolutepath $key_path,
+  String $cert_dir_mode,
+  String $cert_ext,
+  String $cert_mode,
+  String $dhparam_file,
+  String $group,
+  String $key_dir_mode,
+  String $key_ext,
+  String $key_mode,
+  String $owner,
+  String $ca_ext                   = lookup('certs::cert_ext'),
+  Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
+  String $chain_ext                = lookup('certs::cert_ext'),
+  Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
+  Optional[String] $service,
+  Boolean $supported_os            = false,
+  Boolean $validate_x509           = true,
+  Hash $sites                      = {}
 ) {
-    unless $supported_os {
-        fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")
-    }
+  unless $supported_os {
+    fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")
+  }
 
-    create_resources('certs::site', $sites)
+  create_resources('certs::site', $sites)
 
-    # For nodes that have EL6/EL7-style ca trust mechanism
-    exec { 'update_ca_trust':
-      path        => '/usr/bin:/bin',
-      command     => '/usr/bin/update-ca-trust extract',
-      refreshonly => true,
-    }
+  # For nodes that have EL6/EL7-style ca trust mechanism
+  exec { 'update_ca_trust':
+   path        => '/usr/bin:/bin',
+   command     => '/usr/bin/update-ca-trust extract',
+   refreshonly => true,
+  }
 }

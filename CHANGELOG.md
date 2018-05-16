@@ -1,9 +1,13 @@
+## Release 2.1.0 (May 16, 2018)
+
+### Summary
+* The `validate_x509` boolean parameter has been added to support the option to validate OpenSSL certificate and key pairs with the stdlib function `validate_x509_rsa_key_pair`
+
 ## Release 2.0.0 (May 15, 2018)
 
 ### Summary
 * Updating puppetlabs-stdlib dependency to minimum 4.12.0
 * Drop support for Puppet 3.x
-* Use the function `validate_x509_rsa_key_pair` to validate certificates and keys using OpenSSL
 
 ## Release 1.2.1 (August 2, 2017)
 
