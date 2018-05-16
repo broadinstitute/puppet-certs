@@ -129,11 +129,11 @@ class certs(
   String $key_ext,
   String $key_mode,
   String $owner,
+  Optional[String] $service,
   String $ca_ext                   = lookup('certs::cert_ext'),
   Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
   String $chain_ext                = lookup('certs::cert_ext'),
   Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
-  Optional[String] $service,
   Boolean $supported_os            = false,
   Boolean $validate_x509           = true,
   Hash $sites                      = {}
@@ -146,8 +146,8 @@ class certs(
 
   # For nodes that have EL6/EL7-style ca trust mechanism
   exec { 'update_ca_trust':
-   path        => '/usr/bin:/bin',
-   command     => '/usr/bin/update-ca-trust extract',
-   refreshonly => true,
+    path        => '/usr/bin:/bin',
+    command     => '/usr/bin/update-ca-trust extract',
+    refreshonly => true,
   }
 }
