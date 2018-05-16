@@ -170,6 +170,11 @@
 # e.g. 'puppet:///site_certs' will search for the mount point defined in the
 # fileserver.conf on the Puppet Server for the specified files.
 #
+# [*validate_x509*]
+# A boolean value to determine whether or not to validate the certificate and key pairs.
+# Failure will cause the service not to restart.
+# Optional value. Default: true.
+#
 # === Examples
 #
 #  Without Hiera:
@@ -241,6 +246,7 @@ define certs::site(
   Optional[String] $service           = undef,
   String $owner                       = $::certs::owner,
   String $group                       = $::certs::group,
+  Boolean $validate_x509              = $::certs::validate_x509,
 ) {
   # The base class must be included first because it is used by parameter defaults
   unless defined(Class['certs']) {
@@ -263,6 +269,10 @@ define certs::site(
 
   $cert = "${name}${cert_ext}"
   $key  = "${name}${key_ext}"
+
+  if $validate_x509 {
+    validate_x509_rsa_key_pair("${cert_path}/${cert}", "${key_path}/${key}")
+  }
 
   case $source_path {
     undef: {

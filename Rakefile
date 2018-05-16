@@ -7,10 +7,10 @@ require 'puppet/version'
 require 'puppetlabs_spec_helper/rake_tasks'
 
 exclude_paths = [
-    "bundle/**/*",
-    "pkg/**/*",
-    "vendor/**/*",
-    "spec/**/*",
+  "bundle/**/*",
+  "pkg/**/*",
+  "vendor/**/*",
+  "spec/**/*",
 ]
 
 Rake::Task[:lint].clear
@@ -41,23 +41,23 @@ PuppetSyntax.exclude_paths = exclude_paths
 # https://projects.puppetlabs.com/issues/20013
 Rake::Task[:spec].clear
 task :spec do
-    Rake::Task[:spec_prep].invoke
-    Rake::Task[:spec_standalone].invoke
+  Rake::Task[:spec_prep].invoke
+  Rake::Task[:spec_standalone].invoke
 end
 
 begin
-    require 'puppet_blacksmith/rake_tasks'
+  require 'puppet_blacksmith/rake_tasks'
 rescue LoadError
 end
 
 task :metadata_lint do
-    sh "bundle exec metadata-json-lint metadata.json"
+  sh "bundle exec metadata-json-lint metadata.json"
 end
 
 desc "Run syntax, lint, and spec tests."
 task :test => [
-    :syntax,
-    :lint,
-    :spec,
-    :metadata_lint,
+  :syntax,
+  :lint,
+  :spec,
+  :metadata_lint,
 ]
