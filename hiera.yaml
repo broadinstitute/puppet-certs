@@ -1,13 +1,12 @@
 ---
 version: 5
-
 defaults:
   datadir: data
   data_hash: yaml_data
 
 hierarchy:
-    - name: "os family and release YAML"
-      path: "%{facts.osfamily}/%{facts.operatingsystemmajrelease}.yaml"
+    - name: "OS Family"
+      path: "%{facts.osfamily}.yaml"
 
-    - name: "Default yaml file"
+    - name: "Common data"
       path: "common.yaml"

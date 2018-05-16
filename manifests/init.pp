@@ -8,10 +8,6 @@
 # Riccardo Calixte <rcalixte@broadinstitute.org>
 # Andrew Teixeira <teixeira@broadinstitute.org>
 #
-# === Copyright
-#
-# Copyright 2018
-#
 # === Parameters
 #
 # [*ca_ext*]

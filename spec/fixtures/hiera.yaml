@@ -1,8 +1,12 @@
 ---
-:backends:
-  - yaml
-:yaml:
-  :datadir: 'data'
-:hierarchy:
-  - "%{::osfamily}"
-  - common
+version: 5
+defaults:
+  datadir: data
+  data_hash: yaml_data
+
+hierarchy:
+    - name: "OS Family"
+      path: "%{facts.osfamily}.yaml"
+
+    - name: "Common data"
+      path: "common.yaml"
