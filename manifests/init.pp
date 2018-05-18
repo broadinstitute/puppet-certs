@@ -114,8 +114,8 @@
 #
 # [*validate_x509*]
 # A boolean value to determine whether or not to validate the certificate and key pairs.
-# Failure will cause the service not to restart.
-# Optional value. Default: true.
+# Failure will cause the catalog to fail compilation.
+# Optional value. Default: false.
 #
 class certs(
   Stdlib::Absolutepath $cert_path,
@@ -135,7 +135,7 @@ class certs(
   String $chain_ext                = lookup('certs::cert_ext'),
   Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
   Boolean $supported_os            = false,
-  Boolean $validate_x509           = true,
+  Boolean $validate_x509           = false,
   Hash $sites                      = {}
 ) {
   unless $supported_os {

@@ -172,8 +172,8 @@
 #
 # [*validate_x509*]
 # A boolean value to determine whether or not to validate the certificate and key pairs.
-# Failure will cause the service not to restart.
-# Optional value. Default: true.
+# Failure will cause the catalog to fail compilation.
+# Optional value. Default: false.
 #
 # === Examples
 #

@@ -1,3 +1,9 @@
+## Release 2.2.0 (May 18, 2018)
+
+### Summary
+* Switching the `validate_x509` parameter to default to false until it is fully working as intended
+* Adding usage info for `validate_x509` to the README
+
 ## Release 2.1.1 (May 16, 2018)
 
 ### Summary
@@ -12,7 +18,7 @@
 
 ### Summary
 * Updating puppetlabs-stdlib dependency to minimum 4.12.0
-* Drop support for Puppet 3.x
+* Drop support for Puppet 3.x (Thanks to Jo Rhett)
 
 ## Release 1.2.1 (August 2, 2017)
 
