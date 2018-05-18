@@ -371,6 +371,12 @@ The location of the certificate files. Typically references a module's files.
 
 e.g. *'puppet:///site_certs'* will search for the mount point defined in `fileserver.conf` on the Puppet Server for the specified files.
 
+##### `validate_x509`
+A boolean value to determine whether or not to validate the certificate and key pairs.
+Failure will cause the catalog to fail compilation.
+
+Optional value. **Default: false**.
+
 ## Limitations
 
 This module is CI tested against [open source Puppet](https://docs.puppetlabs.com/puppet) on:
