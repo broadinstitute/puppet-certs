@@ -359,7 +359,7 @@ Optional value. **Default: 'root'**.
 ##### `service`
 Name of the server service to notify when certificates are updated.
 
-Setting to `undef` will disable service notifications.
+Setting to `null` will disable service notifications.
 
 Optional value. Defaults:
    - **RedHat**: `httpd`
