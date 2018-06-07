@@ -97,7 +97,7 @@
 #
 # [*service*]
 # Name of the server service to notify when certificates are updated.
-# Setting to `undef` will disable service notifications.
+# Setting to `null` will disable service notifications.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Defaults:
 #   - 'httpd' for RedHat-based systems

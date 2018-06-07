@@ -1,3 +1,9 @@
+## Release 2.2.1 (June 7, 2018)
+
+### Summary
+* Update metadata for #30
+* Adding info for `null` service definitions
+
 ## Release 2.2.0 (May 18, 2018)
 
 ### Summary
