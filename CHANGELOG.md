@@ -1,3 +1,9 @@
+## Release 2.3.1 (June 18, 2018)
+
+### Summary
+* Fix for variable ordering
+* Ensure global definitions actually work...
+
 ## Release 2.3.0 (June 18, 2018)
 
 ### Summary
