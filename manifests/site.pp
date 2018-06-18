@@ -180,12 +180,12 @@
 #  Without Hiera:
 #
 #    include certs
-#    $cname = www.example.com
+#    $cname = 'www.example.com'
 #    certs::site { $cname:
-#        source_path    => 'puppet:///site_certificates',
-#        ca_cert        => true,
-#        ca_name        => 'caname',
-#        ca_source_path => 'puppet:///ca_certs',
+#      ca_cert        => true,
+#      ca_name        => 'caname',
+#      ca_source_path => 'puppet:///ca_certs',
+#      source_path    => 'puppet:///site_certificates',
 #    }
 #
 #  With Hiera:
@@ -193,13 +193,13 @@
 #    server.yaml
 #    ---
 #    classes:
-#        - certs
+#      - certs
 #    certs::sites:
-#        'www.example.com':
-#            source_path: 'puppet:///site_certificates'
-#            ca_cert: true
-#            ca_name: 'caname'
-#            ca_source_path: 'puppet:///ca_certs'
+#      'www.example.com':
+#        ca_cert: true
+#        ca_name: 'caname'
+#        ca_source_path: 'puppet:///ca_certs'
+#        source_path: 'puppet:///site_certificates'
 #
 #  Resource Chaining with Apache Module
 #

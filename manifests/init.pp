@@ -10,15 +10,42 @@
 #
 # === Parameters
 #
+# [*ca_cert*]
+# Boolean for whether to look for a CA certificate file.
+# Optional value. Default: false.
+#
+# [*ca_content*]
+# A string representing the contents of the CA file.
+# Optional value. Default: undef.
+#
 # [*ca_ext*]
 # The extension of the CA certificate file.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: crt.
 #
+# [*ca_name*]
+# The name of the CA certificate file.
+# Optional value. Default: undef.
+#
 # [*ca_path*]
 # Location where the CA certificate file will be stored on the managed node.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: [*cert_path*].
+#
+# [*ca_source_path*]
+# The location of the CA certificate file. Typically references a module's files.
+# e.g. 'puppet:///ca_certs' will search for the mount point defined in the
+# fileserver.conf on the Puppet Server for the specified files.
+# Optional value. Default: [*source_path*].
+#
+# [*cert_chain*]
+# Boolean for whether to look for a certificate chain file.
+# Optional value. Default: false.
+#
+# [*cert_content*]
+# A string representing the contents of the certificate file.  This can only be
+# provided if $source_path is undefined or an error will occur.
+# Optional value. Default: undef.
 #
 # [*cert_dir_mode*]
 # Permissions of the certificate directory.
@@ -44,6 +71,14 @@
 #   - '/usr/local/etc/apache24' on FreeBSD-based systems
 #   - '/etc/ssl/apache2' on Gentoo-based systems
 #
+# [*chain_name*]
+# The name of the certificate chain file.
+# Optional value. Default: undef.
+#
+# [*chain_content*]
+# A string representing the contents of the chain file.
+# Optional value. Default: undef.
+#
 # [*chain_ext*]
 # The extension of the certificate chain file.
 # This sets the default globally for use by all certs::site resources.
@@ -53,6 +88,12 @@
 # Location where the certificate chain file will be stored on the managed node.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Default: [*cert_path*].
+#
+# [*chain_source_path*]
+# The location of the certificate chain file. Typically references a module's files.
+# e.g. 'puppet:///chain_certs' will search for the mount point defined in the
+# fileserver.conf on the Puppet Server for the specified files.
+# Optional value. Default: [*source_path*].
 #
 # [*dhparam_file*]
 # The name of the dhparam file.
@@ -108,6 +149,11 @@
 # A hash of certs::site configurations, typically provided by Hiera.
 # Optional value: Default: {}
 #
+# [*source_path*]
+# The location of the certificate files. Typically references a module's files.
+# e.g. 'puppet:///site_certs' will search for the mount point defined in the
+# fileserver.conf on the Puppet Server for the specified files.
+#
 # [*supported_os*]
 # A boolean value for whether or not the running OS is supported by the module.
 # Configured by default data.
@@ -130,13 +176,23 @@ class certs(
   String $key_mode,
   String $owner,
   Optional[String] $service,
-  String $ca_ext                   = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $ca_path    = lookup('certs::cert_path'),
-  String $chain_ext                = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $chain_path = lookup('certs::cert_path'),
-  Boolean $supported_os            = false,
-  Boolean $validate_x509           = false,
-  Hash $sites                      = {}
+  Optional[String] $ca_content        = undef,
+  Optional[String] $ca_name           = undef,
+  Optional[String] $ca_source_path    = $source_path,
+  Optional[String] $cert_content      = undef,
+  Optional[String] $chain_content     = undef,
+  Optional[String] $chain_name        = undef,
+  Optional[String] $chain_source_path = $source_path,
+  Optional[String] $source_path       = undef,
+  String $ca_ext                      = lookup('certs::cert_ext'),
+  Stdlib::Absolutepath $ca_path       = lookup('certs::cert_path'),
+  String $chain_ext                   = lookup('certs::cert_ext'),
+  Stdlib::Absolutepath $chain_path    = lookup('certs::cert_path'),
+  Boolean $ca_cert                    = false,
+  Boolean $cert_chain                 = false,
+  Boolean $supported_os               = false,
+  Boolean $validate_x509              = false,
+  Hash $sites                         = {}
 ) {
   unless $supported_os {
     fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")

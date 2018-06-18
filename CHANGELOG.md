@@ -1,3 +1,8 @@
+## Release 2.3.0 (June 18, 2018)
+
+### Summary
+* Adding support for global definitions for CA and chain properties as well as the source path
+
 ## Release 2.2.1 (June 7, 2018)
 
 ### Summary
