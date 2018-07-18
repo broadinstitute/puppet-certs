@@ -332,12 +332,23 @@ define certs::site(
     }
   }
 
-  case $service {
-    undef: {
-      $service_notify = undef
+  if $service {
+    case $service {
+      undef: {
+        $service_notify = undef
+      }
+      default: {
+        $service_notify = Service[$service]
+      }
     }
-    default: {
-      $service_notify = Service[$service]
+  } else {
+    case $::certs::service {
+      undef: {
+        $service_notify = undef
+      }
+      default: {
+        $service_notify = Service[$service]
+      }
     }
   }
 

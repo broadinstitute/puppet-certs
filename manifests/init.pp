@@ -175,7 +175,7 @@ class certs(
   String $key_ext,
   String $key_mode,
   String $owner,
-  Optional[String] $service,
+  Optional[String] $service           = undef,
   Optional[String] $source_path       = undef,
   Optional[String] $ca_content        = undef,
   Optional[String] $ca_name           = undef,
