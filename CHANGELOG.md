@@ -1,3 +1,8 @@
+## Release 2.3.2 (July 24, 2018)
+
+### Summary
+* Fix service notifications to work with global definitions as well as per-node definitions
+
 ## Release 2.3.1 (June 18, 2018)
 
 ### Summary
