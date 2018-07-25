@@ -357,9 +357,9 @@ Name of the owner of the certificates.
 Optional value. **Default: 'root'**.
 
 ##### `service`
-Name of the server service to notify when certificates are updated.
+Name of the server service(s) to notify when certificates are updated.
 
-Setting to `null` will disable service notifications.
+Setting to false (or any Boolean) will disable service notifications.
 
 Optional value. Defaults:
    - **RedHat**: `httpd`

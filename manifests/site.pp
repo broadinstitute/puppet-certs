@@ -158,8 +158,8 @@
 # Optional value. Default: 'root'.
 #
 # [*service*]
-# Name of the server service to notify when certificates are updated.
-# Setting to `null` will disable service notifications.
+# Name of the server service(s) to notify when certificates are updated.
+# Setting to false (or any Boolean) will disable service notifications.
 # Optional value. Defaults:
 #   - 'httpd' for RedHat-based systems
 #   - 'apache2' for Debian-based, Suse-based, and Gentoo-based systems
@@ -207,49 +207,44 @@
 #    ---
 #    Certs::Site<| |> -> Apache::Vhost<| |>
 #
-# === Authors
-#
-# Riccardo Calixte <rcalixte@broadinstitute.org>
-# Andrew Teixeira <teixeira@broadinstitute.org>
-#
 define certs::site(
-  Enum['present','absent'] $ensure    = 'present',
-  Optional[String] $source_path       = $::certs::source_path,
-  Stdlib::Absolutepath $cert_path     = $::certs::cert_path,
-  String $cert_dir_mode               = $::certs::cert_dir_mode,
-  String $cert_ext                    = $::certs::cert_ext,
-  String $cert_mode                   = $::certs::cert_mode,
-  Optional[String] $cert_content      = $::certs::cert_content,
-  Stdlib::Absolutepath $key_path      = $::certs::key_path,
-  String $key_dir_mode                = $::certs::key_dir_mode,
-  String $key_ext                     = $::certs::key_ext,
-  String $key_mode                    = $::certs::key_mode,
-  Boolean $merge_key                  = false,
-  Optional[String] $key_content       = undef,
-  Boolean $ca_cert                    = $::certs::ca_cert,
-  Optional[String] $ca_name           = $::certs::ca_name,
-  Optional[String] $ca_source_path    = pick_default($::certs::ca_source_path, $source_path),
-  Stdlib::Absolutepath $ca_path       = $::certs::ca_path,
-  String $ca_ext                      = $::certs::ca_ext,
-  Optional[String] $ca_content        = $::certs::ca_content,
-  Boolean $cert_chain                 = $::certs::cert_chain,
-  Optional[String] $chain_name        = $::certs::chain_name,
-  Stdlib::Absolutepath $chain_path    = $::certs::chain_path,
-  String $chain_ext                   = $::certs::chain_ext,
-  Optional[String] $chain_source_path = pick_default($::certs::chain_source_path, $source_path),
-  Optional[String] $chain_content     = $::certs::chain_content,
-  Boolean $merge_chain                = false,
-  Boolean $dhparam                    = false,
-  Optional[String] $dhparam_content   = undef,
-  String $dhparam_file                = $::certs::dhparam_file,
-  Boolean $merge_dhparam              = false,
-  Optional[String] $service           = undef,
-  String $owner                       = $::certs::owner,
-  String $group                       = $::certs::group,
-  Boolean $validate_x509              = $::certs::validate_x509,
+  Enum['present','absent'] $ensure                         = 'present',
+  Optional[String] $source_path                            = $::certs::source_path,
+  Stdlib::Absolutepath $cert_path                          = $::certs::cert_path,
+  String $cert_dir_mode                                    = $::certs::cert_dir_mode,
+  String $cert_ext                                         = $::certs::cert_ext,
+  String $cert_mode                                        = $::certs::cert_mode,
+  Optional[String] $cert_content                           = $::certs::cert_content,
+  Stdlib::Absolutepath $key_path                           = $::certs::key_path,
+  String $key_dir_mode                                     = $::certs::key_dir_mode,
+  String $key_ext                                          = $::certs::key_ext,
+  String $key_mode                                         = $::certs::key_mode,
+  Boolean $merge_key                                       = false,
+  Optional[String] $key_content                            = $::certs::key_content,
+  Boolean $ca_cert                                         = $::certs::ca_cert,
+  Optional[String] $ca_name                                = $::certs::ca_name,
+  Optional[String] $ca_source_path                         = pick_default($::certs::ca_source_path, $source_path),
+  Stdlib::Absolutepath $ca_path                            = $::certs::ca_path,
+  String $ca_ext                                           = $::certs::ca_ext,
+  Optional[String] $ca_content                             = $::certs::ca_content,
+  Boolean $cert_chain                                      = $::certs::cert_chain,
+  Optional[String] $chain_name                             = $::certs::chain_name,
+  Stdlib::Absolutepath $chain_path                         = $::certs::chain_path,
+  String $chain_ext                                        = $::certs::chain_ext,
+  Optional[String] $chain_source_path                      = pick_default($::certs::chain_source_path, $source_path),
+  Optional[String] $chain_content                          = $::certs::chain_content,
+  Boolean $merge_chain                                     = false,
+  Boolean $dhparam                                         = false,
+  Optional[String] $dhparam_content                        = undef,
+  String $dhparam_file                                     = $::certs::dhparam_file,
+  Boolean $merge_dhparam                                   = false,
+  Optional[Variant[Array[String],Boolean,String]] $service = $::certs::service,
+  String $owner                                            = $::certs::owner,
+  String $group                                            = $::certs::group,
+  Boolean $validate_x509                                   = $::certs::validate_x509,
 ) {
   # The base class must be included first because it is used by parameter defaults
-  unless defined(Class['certs']) {
+  unless (defined(Class['certs'])) {
     fail('You must include the certs base class before using any certs defined resources')
   }
 
@@ -261,7 +256,7 @@ define certs::site(
     fail('You can only provide $source_path or $cert_content/$key_content, not both.')
   }
 
-  unless $source_path {
+  unless ($source_path) {
     unless($cert_content and $key_content) {
       fail('If source_path is not set, $cert_content and $key_content must both be set.')
     }
@@ -270,7 +265,7 @@ define certs::site(
   $cert = "${name}${cert_ext}"
   $key  = "${name}${key_ext}"
 
-  if $validate_x509 {
+  if ($validate_x509) {
     validate_x509_rsa_key_pair("${cert_path}/${cert}", "${key_path}/${key}")
   }
 
@@ -290,13 +285,13 @@ define certs::site(
     default => undef,
   }
 
-  if $cert_chain {
+  if ($cert_chain) {
     if ($chain_name == undef) {
       fail('You must provide a chain_name value for the cert chain to certs::site.')
     }
     $chain = "${chain_name}${chain_ext}"
 
-    if $chain_content == undef {
+    if ($chain_content == undef) {
       if ($chain_source_path == undef) {
         fail('You must provide a chain_source_path for the SSL files to certs::site.')
       }
@@ -315,13 +310,13 @@ define certs::site(
     }
   }
 
-  if $ca_cert {
+  if ($ca_cert) {
     if ($ca_name == undef) {
       fail('You must provide a ca_name value for the CA cert to certs::site.')
     }
     $ca = "${ca_name}${ca_ext}"
 
-    if $ca_content == undef {
+    if ($ca_content == undef) {
       if ($ca_source_path == undef) {
         fail('You must provide a ca_source_path for the SSL files to certs::site.')
       }
@@ -332,23 +327,13 @@ define certs::site(
     }
   }
 
-  if $service {
-    case $service {
-      undef: {
-        $service_notify = undef
-      }
-      default: {
-        $service_notify = Service[$service]
-      }
-    }
-  } else {
-    case $::certs::service {
-      undef: {
-        $service_notify = undef
-      }
-      default: {
-        $service_notify = Service[$service]
-      }
+  if ($service =~ String) {
+    $service_notify = Service[$service]
+  } elsif ($service =~ Boolean) {
+    $service_notify = undef
+  } elsif ($service =~ Array[String]) {
+    $service_notify = $service.map |$serv| {
+      "Service[${serv}]"
     }
   }
 
@@ -368,7 +353,7 @@ define certs::site(
     mode   => $key_dir_mode,
   })
 
-  if $merge_chain or $merge_key or $merge_dhparam {
+  if ($merge_chain or $merge_key or $merge_dhparam) {
     concat { "${name}_cert_merged":
         ensure         => $ensure,
         ensure_newline => true,
@@ -388,7 +373,7 @@ define certs::site(
       order   => '01',
     }
 
-    if $merge_key {
+    if ($merge_key) {
       concat::fragment { "${cert}_key":
         target  => "${name}_cert_merged",
         source  => $key_source,
@@ -397,8 +382,8 @@ define certs::site(
       }
     }
 
-    if $merge_chain {
-      if $cert_chain {
+    if ($merge_chain) {
+      if ($cert_chain) {
         concat::fragment { "${cert}_chain":
           target  => "${name}_cert_merged",
           source  => $chain_source,
@@ -406,7 +391,7 @@ define certs::site(
           order   => '50',
         }
       }
-      if $ca_cert {
+      if ($ca_cert) {
         concat::fragment { "${cert}_ca":
           target  => "${name}_cert_merged",
           source  => $ca_source,
@@ -416,7 +401,7 @@ define certs::site(
       }
     }
 
-    if $dhparam and $merge_dhparam {
+    if ($dhparam and $merge_dhparam) {
       concat::fragment { "${cert}_dhparam":
         target  => "${name}_cert_merged",
         source  => $dhparam_source,

@@ -3,11 +3,6 @@
 # The certs class provides a single define, certs::site, configurable
 # within Hiera as well.
 #
-# === Authors
-#
-# Riccardo Calixte <rcalixte@broadinstitute.org>
-# Andrew Teixeira <teixeira@broadinstitute.org>
-#
 # === Parameters
 #
 # [*ca_cert*]
@@ -107,6 +102,11 @@
 #   - 'root' for Redhat-based, Debian-based, and Suse-based systems
 #   - 'wheel' for FreeBSD and Gentoo-based systems
 #
+# [*key_content*]
+# A string representing the contents of the key file.  This can only be
+# provided if $source_path is undefined or an error will occur.
+# Optional value. Default: undef.
+#
 # [*key_dir_mode*]
 # Permissions of the private keys directory.
 # This sets the default globally for use by all certs::site resources.
@@ -137,8 +137,8 @@
 # Optional value. Default: 'root'.
 #
 # [*service*]
-# Name of the server service to notify when certificates are updated.
-# Setting to `null` will disable service notifications.
+# Name of the server service(s) to notify when certificates are updated.
+# Setting to false (or any Boolean) will disable service notifications.
 # This sets the default globally for use by all certs::site resources.
 # Optional value. Defaults:
 #   - 'httpd' for RedHat-based systems
@@ -175,24 +175,25 @@ class certs(
   String $key_ext,
   String $key_mode,
   String $owner,
-  Optional[String] $service           = undef,
-  Optional[String] $source_path       = undef,
-  Optional[String] $ca_content        = undef,
-  Optional[String] $ca_name           = undef,
-  Optional[String] $ca_source_path    = $source_path,
-  Optional[String] $cert_content      = undef,
-  Optional[String] $chain_content     = undef,
-  Optional[String] $chain_name        = undef,
-  Optional[String] $chain_source_path = $source_path,
-  String $ca_ext                      = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $ca_path       = lookup('certs::cert_path'),
-  String $chain_ext                   = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $chain_path    = lookup('certs::cert_path'),
-  Boolean $ca_cert                    = false,
-  Boolean $cert_chain                 = false,
-  Boolean $supported_os               = false,
-  Boolean $validate_x509              = false,
-  Hash $sites                         = {}
+  Optional[String] $key_content                            = undef,
+  Optional[Variant[Array[String],Boolean,String]] $service = lookup('certs::service'),
+  Optional[String] $source_path                            = undef,
+  Optional[String] $ca_content                             = undef,
+  Optional[String] $ca_name                                = undef,
+  Optional[String] $ca_source_path                         = $source_path,
+  Optional[String] $cert_content                           = undef,
+  Optional[String] $chain_content                          = undef,
+  Optional[String] $chain_name                             = undef,
+  Optional[String] $chain_source_path                      = $source_path,
+  String $ca_ext                                           = lookup('certs::cert_ext'),
+  Stdlib::Absolutepath $ca_path                            = lookup('certs::cert_path'),
+  String $chain_ext                                        = lookup('certs::cert_ext'),
+  Stdlib::Absolutepath $chain_path                         = lookup('certs::cert_path'),
+  Boolean $ca_cert                                         = false,
+  Boolean $cert_chain                                      = false,
+  Boolean $supported_os                                    = false,
+  Boolean $validate_x509                                   = false,
+  Hash $sites                                              = {}
 ) {
   unless $supported_os {
     fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")

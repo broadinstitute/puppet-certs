@@ -8,7 +8,7 @@ describe 'certs::site', :type => :define do
     context "on #{osfamily}" do
       # This define requires the certs class, so make sure it's defined
       let :pre_condition do
-        'class { "certs": }'
+        'class { "certs": service => false, validate_x509 => false, cert_content => "cert1111", key_content => "key1111" }'
       end
 
       if osfamily == 'Debian'
@@ -16,19 +16,12 @@ describe 'certs::site', :type => :define do
           :lsbdistcodename           => 'wheezy',
           :lsbdistid                 => 'Debian',
           :operatingsystem           => 'Debian',
-          :operatingsystemmajrelease => '7',
-          :operatingsystemrelease    => '7.3',
+          :operatingsystemmajrelease => '9',
+          :operatingsystemrelease    => '9.5',
           :osfamily                  => 'Debian',
         } }
 
         context 'with only cert and key content set' do
-          let(:params) {{
-            :cert_content  => 'cert1111',
-            :key_content   => 'key1111',
-            :service       => :undef,
-            :validate_x509 => false,
-          }}
-
           it { is_expected.to contain_file('/etc/ssl/certs').
             with_ensure('directory')
           }
@@ -53,13 +46,6 @@ describe 'certs::site', :type => :define do
         } }
 
         context 'with only cert and key content set' do
-          let(:params) {{
-            :cert_content  => 'cert1111',
-            :key_content   => 'key1111',
-            :service       => :undef,
-            :validate_x509 => false,
-          }}
-
           it { is_expected.to contain_file('/usr/local/etc/apache24').
             with_ensure('directory')
           }
@@ -83,13 +69,6 @@ describe 'certs::site', :type => :define do
         }}
 
         context 'with only cert and key content set' do
-          let(:params) {{
-            :cert_content  => 'cert1111',
-            :key_content   => 'key1111',
-            :service       => :undef,
-            :validate_x509 => false,
-          }}
-
           it { is_expected.to contain_file('/etc/ssl/apache2').
             with_ensure('directory')
           }
@@ -109,18 +88,11 @@ describe 'certs::site', :type => :define do
         let(:facts) {{
           :operatingsystem           => 'RedHat',
           :operatingsystemmajrelease => '7',
-          :operatingsystemrelease    => '7.2',
+          :operatingsystemrelease    => '7.5',
           :osfamily                  => osfamily,
         }}
 
         context 'with only cert and key content set' do
-          let(:params) {{
-            :cert_content  => 'cert1111',
-            :key_content   => 'key1111',
-            :service       => :undef,
-            :validate_x509 => false,
-          }}
-
           it { is_expected.to contain_file('/etc/pki/tls/certs').
             with_ensure('directory')
           }
@@ -144,22 +116,20 @@ describe 'certs::site', :type => :define do
       :lsbdistcodename           => 'wheezy',
       :lsbdistid                 => 'Debian',
       :operatingsystem           => 'Debian',
-      :operatingsystemmajrelease => '7',
-      :operatingsystemrelease    => '7.3',
+      :operatingsystemmajrelease => '9',
+      :operatingsystemrelease    => '9.5',
       :osfamily                  => 'Debian',
     }}
 
     # This define requires the certs class, so make sure it's defined
     let :pre_condition do
-      'class { "certs": }'
+      'class { "certs": service => false, validate_x509 => false}'
     end
 
     context 'with only cert and key content set' do
       let(:params) {{
         :cert_content  => 'cert1111',
         :key_content   => 'key1111',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -172,9 +142,7 @@ describe 'certs::site', :type => :define do
 
     context 'with only cert and key using source_path' do
       let(:params) {{
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -188,9 +156,7 @@ describe 'certs::site', :type => :define do
     context 'with ensure => absent' do
       let(:params) {{
         :ensure        => 'absent',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -205,9 +171,7 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :dhparam       => true,
         :ensure        => 'absent',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -227,10 +191,7 @@ describe 'certs::site', :type => :define do
         :ca_content    => 'ca2222',
         :ca_name       => 'ca',
         :cert_content  => 'cert1111',
-        :ensure        => 'present',
         :key_content   => 'key1111',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -248,10 +209,7 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :ca_cert       => true,
         :ca_name       => 'ca',
-        :ensure        => 'present',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -270,10 +228,7 @@ describe 'certs::site', :type => :define do
         :ca_cert        => true,
         :ca_name        => 'ca',
         :ca_source_path => 'puppet:///site_certs',
-        :ensure         => 'present',
-        :service        => :undef,
         :source_path    => 'puppet:///site_certs/base.example.org',
-        :validate_x509  => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -293,10 +248,7 @@ describe 'certs::site', :type => :define do
         :cert_content  => 'cert1111',
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -314,10 +266,7 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :cert_chain    => true,
         :chain_name    => 'chain',
-        :ensure        => 'present',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -336,10 +285,7 @@ describe 'certs::site', :type => :define do
         :cert_chain        => true,
         :chain_name        => 'chain',
         :chain_source_path => 'puppet:///site_certs',
-        :ensure            => 'present',
-        :service           => :undef,
         :source_path       => 'puppet:///site_certs/base.example.org',
-        :validate_x509     => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -359,11 +305,8 @@ describe 'certs::site', :type => :define do
         :ca_content    => 'ca2222',
         :ca_name       => 'ca',
         :cert_content  => 'cert1111',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :merge_chain   => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -389,11 +332,8 @@ describe 'certs::site', :type => :define do
         :ca_cert        => true,
         :ca_name        => 'ca',
         :ca_source_path => 'puppet:///site_certs',
-        :ensure         => 'present',
         :merge_chain    => true,
-        :service        => :undef,
         :source_path    => 'puppet:///site_certs/base.example.org',
-        :validate_x509  => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -420,11 +360,8 @@ describe 'certs::site', :type => :define do
         :cert_content  => 'cert1111',
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :merge_chain   => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -450,11 +387,8 @@ describe 'certs::site', :type => :define do
         :cert_chain        => true,
         :chain_name        => 'chain',
         :chain_source_path => 'puppet:///site_certs',
-        :ensure            => 'present',
         :merge_chain       => true,
-        :service           => :undef,
         :source_path       => 'puppet:///site_certs/base.example.org',
-        :validate_x509     => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -484,11 +418,8 @@ describe 'certs::site', :type => :define do
         :cert_chain    => true,
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :merge_chain   => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -521,11 +452,8 @@ describe 'certs::site', :type => :define do
         :cert_chain        => true,
         :chain_name        => 'chain',
         :chain_source_path => 'puppet:///site_certs',
-        :ensure            => 'present',
         :merge_chain       => true,
-        :service           => :undef,
         :source_path       => 'puppet:///site_certs/base.example.org',
-        :validate_x509     => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -556,11 +484,8 @@ describe 'certs::site', :type => :define do
         :cert_content    => 'cert1111',
         :dhparam         => true,
         :dhparam_content => 'dh4444',
-        :ensure          => 'present',
         :key_content     => 'key1111',
         :merge_dhparam   => true,
-        :service         => :undef,
-        :validate_x509   => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -581,11 +506,8 @@ describe 'certs::site', :type => :define do
     context 'with merge_dhparam => true, with source' do
       let(:params) {{
         :dhparam         => true,
-        :ensure          => 'present',
         :merge_dhparam   => true,
-        :service         => :undef,
         :source_path     => 'puppet:///site_certs/base.example.org',
-        :validate_x509   => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -607,11 +529,8 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :dhparam         => false,
         :dhparam_content => 'dh4444',
-        :ensure          => 'present',
         :merge_dhparam   => true,
-        :service         => :undef,
         :source_path     => 'puppet:///site_certs/base.example.org',
-        :validate_x509   => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/private/base.example.org.key') }
@@ -637,12 +556,9 @@ describe 'certs::site', :type => :define do
         :chain_name      => 'chain',
         :dhparam         => true,
         :dhparam_content => 'dh4444',
-        :ensure          => 'present',
         :key_content     => 'key1111',
         :merge_chain     => true,
         :merge_dhparam   => true,
-        :service         => :undef,
-        :validate_x509   => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -678,12 +594,9 @@ describe 'certs::site', :type => :define do
         :chain_name        => 'chain',
         :chain_source_path => 'puppet:///site_certs',
         :dhparam           => true,
-        :ensure            => 'present',
         :merge_chain       => true,
         :merge_dhparam     => true,
-        :service           => :undef,
         :source_path       => 'puppet:///site_certs/base.example.org',
-        :validate_x509     => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -718,11 +631,8 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :cert_content  => 'cert1111',
         :key_content   => 'key1111',
-        :ensure        => 'present',
         :merge_chain   => false,
         :merge_key     => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -747,12 +657,9 @@ describe 'certs::site', :type => :define do
         :cert_content  => 'cert1111',
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :merge_chain   => true,
         :merge_key     => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -785,12 +692,9 @@ describe 'certs::site', :type => :define do
         :cert_content  => 'cert1111',
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :merge_chain   => false,
         :merge_key     => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -824,12 +728,9 @@ describe 'certs::site', :type => :define do
         :cert_content  => 'cert1111',
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :merge_chain   => true,
         :merge_key     => true,
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -869,13 +770,10 @@ describe 'certs::site', :type => :define do
         :chain_name      => 'chain',
         :dhparam         => true,
         :dhparam_content => 'dh4444',
-        :ensure          => 'present',
         :key_content     => 'key1111',
         :merge_chain     => true,
         :merge_dhparam   => true,
         :merge_key       => true,
-        :service         => :undef,
-        :validate_x509   => false,
       }}
 
       it { is_expected.to contain_concat('base.example.org_cert_merged') }
@@ -911,10 +809,7 @@ describe 'certs::site', :type => :define do
     context 'with dhparam file' do
       let(:params) {{
         :dhparam       => true,
-        :ensure        => 'present',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org_dh2048.pem') }
@@ -924,9 +819,7 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :dhparam       => true,
         :ensure        => 'absent',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org_dh2048.pem').
@@ -937,10 +830,7 @@ describe 'certs::site', :type => :define do
     context 'with dhparam file with source_path' do
       let(:params) {{
         :dhparam       => true,
-        :ensure        => 'present',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org_dh2048.pem').
@@ -952,10 +842,7 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :dhparam         => true,
         :dhparam_content => 'dh4444',
-        :ensure          => 'present',
-        :service         => :undef,
         :source_path     => 'puppet:///site_certs/base.example.org',
-        :validate_x509   => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org_dh2048.pem').
@@ -967,10 +854,7 @@ describe 'certs::site', :type => :define do
       let(:params) {{
         :dhparam       => true,
         :dhparam_file  => 'dhparam.crt',
-        :ensure        => 'present',
-        :service       => :undef,
         :source_path   => 'puppet:///site_certs/base.example.org',
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org_dhparam.crt').
@@ -988,11 +872,8 @@ describe 'certs::site', :type => :define do
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
         :dhparam       => true,
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :owner         => 'newowner',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -1022,11 +903,8 @@ describe 'certs::site', :type => :define do
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
         :dhparam       => true,
-        :ensure        => 'present',
         :group         => 'newgroup',
         :key_content   => 'key1111',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt').
@@ -1058,12 +936,9 @@ describe 'certs::site', :type => :define do
         :chain_content => 'chain3333',
         :chain_name    => 'chain',
         :dhparam       => true,
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :key_mode      => '0400',
         :key_dir_mode  => '0500',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs').
@@ -1107,11 +982,8 @@ describe 'certs::site', :type => :define do
         :chain_content => 'chain3333',
         :chain_ext     => '.pem',
         :chain_name    => 'chain',
-        :ensure        => 'present',
         :key_content   => 'key1111',
         :key_ext       => '.pem',
-        :service       => :undef,
-        :validate_x509 => false,
       }}
 
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org.pem') }
