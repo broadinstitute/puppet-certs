@@ -1,3 +1,9 @@
+## Release 2.4.0 (July 26, 2018)
+
+### Summary
+* Add support for an array of services in `service` parameter #16
+* Rewrite `service` parameter entirely - proper values are now Array[String], Boolean, or String
+
 ## Release 2.3.2 (July 24, 2018)
 
 ### Summary
