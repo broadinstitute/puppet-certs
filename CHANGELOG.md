@@ -1,3 +1,8 @@
+## Release 2.5.0 (July 27, 2018)
+
+### Summary
+* Change mode and location of resulting file when `merge_key` is set to true #31
+
 ## Release 2.4.0 (July 26, 2018)
 
 ### Summary

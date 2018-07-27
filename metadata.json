@@ -1,6 +1,6 @@
 {
   "name": "broadinstitute-certs",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "author": "Riccardo Calixte <rcalixte@broadinstitute.org>",
   "description": "Module for SSL certificate configuration",
   "summary": "Configures and manages SSL certificate deployments, restarting services as configured.",
