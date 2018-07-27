@@ -353,15 +353,24 @@ define certs::site(
     mode   => $key_dir_mode,
   })
 
+  if ($merge_key) {
+    $substring_mode = $cert_mode[0,-3]
+    $_cert_mode = "${substring_mode}00"
+    $_cert_path = $key_path
+  } else {
+    $_cert_mode = $cert_mode
+    $_cert_path = $cert_path
+  }
+
   if ($merge_chain or $merge_key or $merge_dhparam) {
     concat { "${name}_cert_merged":
         ensure         => $ensure,
         ensure_newline => true,
         backup         => false,
-        path           => "${cert_path}/${cert}",
+        path           => "${_cert_path}/${cert}",
         owner          => $owner,
         group          => $group,
-        mode           => $cert_mode,
+        mode           => $_cert_mode,
         require        => File[$cert_path],
         notify         => $service_notify,
     }
