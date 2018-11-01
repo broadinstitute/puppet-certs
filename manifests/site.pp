@@ -478,6 +478,6 @@ define certs::site(
   }
 
   if ($validate_x509) {
-    validate_x509_rsa_key_pair("${cert_path}/${cert}", "${key_path}/${key}")
+    validate_x509_rsa_key_pair($cert_content, $key_content)
   }
 }
