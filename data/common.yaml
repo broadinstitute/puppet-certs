@@ -8,4 +8,4 @@ certs::key_dir_mode: '0755'
 certs::key_ext: '.key'
 certs::key_mode: '0600'
 certs::owner: 'root'
-certs::validate_x509: false
+certs::validate_x509: true
