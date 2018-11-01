@@ -265,10 +265,6 @@ define certs::site(
   $cert = "${name}${cert_ext}"
   $key  = "${name}${key_ext}"
 
-  if ($validate_x509) {
-    validate_x509_rsa_key_pair("${cert_path}/${cert}", "${key_path}/${key}")
-  }
-
   case $source_path {
     undef: {
       $cert_source = undef
@@ -479,5 +475,9 @@ define certs::site(
       require => File[$cert_path],
       notify  => $service_notify,
     })
+  }
+
+  if ($validate_x509) {
+    validate_x509_rsa_key_pair("${cert_path}/${cert}", "${key_path}/${key}")
   }
 }
