@@ -207,7 +207,7 @@
 #    ---
 #    Certs::Site<| |> -> Apache::Vhost<| |>
 #
-define certs::site(
+define certs::site (
   Enum['present','absent'] $ensure                         = 'present',
   Optional[String] $source_path                            = $::certs::source_path,
   Stdlib::Absolutepath $cert_path                          = $::certs::cert_path,
@@ -337,13 +337,35 @@ define certs::site(
     }
   }
 
-  ensure_resource('file', [$cert_path, $chain_path, $ca_path], {
-    ensure => 'directory',
-    backup => false,
-    owner  => $owner,
-    group  => $group,
-    mode   => $cert_dir_mode,
-  })
+  if (! defined(File[$cert_path])) {
+    file { $cert_path:
+      ensure => 'directory',
+      backup => false,
+      owner  => $owner,
+      group  => $group,
+      mode   => $cert_dir_mode,
+    }
+  }
+
+  if (! defined(File[$chain_path])) {
+    file { $chain_path:
+      ensure => 'directory',
+      backup => false,
+      owner  => $owner,
+      group  => $group,
+      mode   => $cert_dir_mode,
+    }
+  }
+
+  if (! defined(File[$ca_path])) {
+    file { $ca_path:
+      ensure => 'directory',
+      backup => false,
+      owner  => $owner,
+      group  => $group,
+      mode   => $cert_dir_mode,
+    }
+  }
 
   ensure_resource('file', $key_path, {
     ensure => 'directory',

@@ -1,7 +1,7 @@
 ---
 :backends:
-    - yaml
+  - yaml
 :hierarchy:
-    - global
+  - global
 :yaml:
-    :datadir: /etc/puppetlabs/code/hieradata
+  :datadir: /etc/puppetlabs/code/hieradata

@@ -8,3 +8,5 @@ vendor
 .idea
 .project
 .DS_Store
+.librarian/*
+.tmp/*

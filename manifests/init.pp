@@ -163,7 +163,7 @@
 # Failure will cause the catalog to fail compilation.
 # Optional value. Default: false.
 #
-class certs(
+class certs (
   Stdlib::Absolutepath $cert_path,
   Stdlib::Absolutepath $key_path,
   String $cert_dir_mode,
