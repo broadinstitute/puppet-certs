@@ -98,6 +98,10 @@
 # take precedence over dhparam_file if it exists on the source side.
 # Optional value. Default: undef.
 #
+# [*dhparam_dir*]
+# The directory in which the dhparam file should be placed.
+# Optional value. Default: ${cert_path}.
+#
 # [*dhparam_file*]
 # The name of the dhparam file.
 # Optional value. Default: 'dh2048.pem'.
@@ -236,6 +240,7 @@ define certs::site (
   Boolean $merge_chain                                     = false,
   Boolean $dhparam                                         = false,
   Optional[String] $dhparam_content                        = undef,
+  Optional[Stdlib::Absolutepath] $dhparam_dir              = undef,
   String $dhparam_file                                     = $::certs::dhparam_file,
   Boolean $merge_dhparam                                   = false,
   Optional[Variant[Array[String],Boolean,String]] $service = $::certs::service,
@@ -491,7 +496,13 @@ define certs::site (
   }
 
   if ($dhparam) {
-    ensure_resource('file', "${cert_path}/${name}_${dhparam_file}", {
+    if $dhparam_dir {
+      $dhparam_path = "${dhparam_dir}/${name}_${dhparam_file}"
+    } else {
+      $dhparam_path = "${cert_path}/${name}_${dhparam_file}"
+    }
+
+    ensure_resource('file', $dhparam_path, {
       ensure  => $ensure,
       source  => $dhparam_source,
       content => $dhparam_content,
