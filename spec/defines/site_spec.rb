@@ -815,6 +815,16 @@ describe 'certs::site', :type => :define do
       it { is_expected.to contain_file('/etc/ssl/certs/base.example.org_dh2048.pem') }
     end
 
+    context 'with dhparam file and custom directory' do
+      let(:params) {{
+        :dhparam       => true,
+        :dhparam_dir   => '/tmp/dir',
+        :source_path   => 'puppet:///site_certs/base.example.org',
+      }}
+
+      it { is_expected.to contain_file('/tmp/dir/base.example.org_dh2048.pem') }
+    end
+
     context 'with dhparam file, with ensure => absent' do
       let(:params) {{
         :dhparam       => true,
