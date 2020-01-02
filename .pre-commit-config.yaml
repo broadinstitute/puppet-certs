@@ -3,7 +3,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.4.0
     hooks:
-      - id: trailing-whitespace
       - id: check-executables-have-shebangs
       - id: check-json
       - id: check-merge-conflict
@@ -11,16 +10,17 @@ repos:
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
+      - id: trailing-whitespace
   - repo: https://github.com/chriskuehl/puppet-pre-commit-hooks.git
     rev: v2.1.0
     hooks:
-      - id: puppet-validate
-      - id: erb-validate
       - id: epp-validate
+      - id: erb-validate
       - id: puppet-lint
         args:
           - --fail-on-warnings
           - --relative
+      - id: puppet-validate
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.20.0
     hooks:

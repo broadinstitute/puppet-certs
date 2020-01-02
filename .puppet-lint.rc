@@ -1,0 +1,4 @@
+--relative
+--no-80chars-check
+--no-autoloader_layout-check
+--no-puppet_url_without_modules-check

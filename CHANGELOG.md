@@ -1,94 +1,130 @@
-## Release 2.5.0 (July 27, 2018)
+# Change log
 
-### Summary
-* Change mode and location of resulting file when `merge_key` is set to true #31
+All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## Release 2.4.0 (July 26, 2018)
+## [2.5.1](https://github.com/broadinstitute/puppet-certs/tree/2.5.1) (2020-01-02)
 
-### Summary
-* Add support for an array of services in `service` parameter #16
-* Rewrite `service` parameter entirely - proper values are now Array[String], Boolean, or String
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.5.0...2.5.1)
 
-## Release 2.3.2 (July 24, 2018)
+### Fixed
 
-### Summary
-* Fix service notifications to work with global definitions as well as per-node definitions
+- Make dhparam directory customizable \(Fixes \#38\) [\#45](https://github.com/broadinstitute/puppet-certs/pull/45) ([coreone](https://github.com/coreone))
+- Fix ensure\_resource on multiple directories not working correctly [\#43](https://github.com/broadinstitute/puppet-certs/pull/43) ([coreone](https://github.com/coreone))
 
-## Release 2.3.1 (June 18, 2018)
+## [2.5.0](https://github.com/broadinstitute/puppet-certs/tree/2.5.0) (2018-07-27)
 
-### Summary
-* Fix for variable ordering
-* Ensure global definitions actually work...
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.4.0...2.5.0)
 
-## Release 2.3.0 (June 18, 2018)
+### Added
 
-### Summary
-* Adding support for global definitions for CA and chain properties as well as the source path
+- Change default mode and location when merging key \#31 [\#37](https://github.com/broadinstitute/puppet-certs/pull/37) ([rcalixte](https://github.com/rcalixte))
 
-## Release 2.2.1 (June 7, 2018)
+## [2.4.0](https://github.com/broadinstitute/puppet-certs/tree/2.4.0) (2018-07-26)
 
-### Summary
-* Update metadata for #30
-* Adding info for `null` service definitions
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.3.2...2.4.0)
 
-## Release 2.2.0 (May 18, 2018)
+### Added
 
-### Summary
-* Switching the `validate_x509` parameter to default to false until it is fully working as intended
-* Adding usage info for `validate_x509` to the README
+- Rewrite service notifications [\#36](https://github.com/broadinstitute/puppet-certs/pull/36) ([rcalixte](https://github.com/rcalixte))
 
-## Release 2.1.1 (May 16, 2018)
+## [2.3.2](https://github.com/broadinstitute/puppet-certs/tree/2.3.2) (2018-07-24)
 
-### Summary
-* Minor fix for lint
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.3.1...2.3.2)
 
-## Release 2.1.0 (May 16, 2018)
+### Fixed
 
-### Summary
-* The `validate_x509` boolean parameter has been added to support the option to validate OpenSSL certificate and key pairs with the stdlib function `validate_x509_rsa_key_pair`
+- Fix service notifications [\#35](https://github.com/broadinstitute/puppet-certs/pull/35) ([rcalixte](https://github.com/rcalixte))
 
-## Release 2.0.0 (May 15, 2018)
+## [2.3.1](https://github.com/broadinstitute/puppet-certs/tree/2.3.1) (2018-06-18)
 
-### Summary
-* Updating puppetlabs-stdlib dependency to minimum 4.12.0
-* Drop support for Puppet 3.x (Thanks to Jo Rhett)
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.3.0...2.3.1)
 
-## Release 1.2.1 (August 2, 2017)
+## [2.3.0](https://github.com/broadinstitute/puppet-certs/tree/2.3.0) (2018-06-18)
 
-### Summary
-* Fix a small string vs. boolean bug in new dhparam code
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.2.1...2.3.0)
 
-## Release 1.2.0 (July 28, 2017)
+### Added
 
-### Summary
-* Introducing an option to add a Diffie-Helman parameters file, including the ability to merge the file with the certificate file if necessary
-* Many more and expanded spec tests, along with spec test cleanup
+- Add more global defaults [\#33](https://github.com/broadinstitute/puppet-certs/pull/33) ([rcalixte](https://github.com/rcalixte))
 
-## Release 1.1.0 (January 17, 2017)
+## [2.2.1](https://github.com/broadinstitute/puppet-certs/tree/2.2.1) (2018-06-07)
 
-### Summary
-* Introducing an option to merge the private key into certificates for services that require it
-* Update spec replacing `should` with `is_expected.to` for all tests
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.2.0...2.2.1)
 
-### Features
-* The `merge_key` parameter has been added to support merging private keys with certificates when required.
+### Added
 
-## Release 1.0.0 (September 6, 2016)
+- Documentation fixes \(\#30\) [\#32](https://github.com/broadinstitute/puppet-certs/pull/32) ([rcalixte](https://github.com/rcalixte))
 
-### Summary
-* Introducing new features, primarily an option to merge certificates for services that require it
-* Adding Vagrant support for testing using Puppet 4
-* Travis configuration fixes
-* Rewriting parameters for the module
-* Adding spec tests
+## [2.2.0](https://github.com/broadinstitute/puppet-certs/tree/2.2.0) (2018-05-18)
 
-### Features
-* The `cert_dir_mode`, `key_dir_mode`, and `merge_chain` parameters have been added to support directory modes for certificates and keys and to also merge certificates when required.
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.1.1...2.2.0)
 
-### Changes
-* Module parameters are now capable of being defined globally in the base class.
+### Added
 
-## Release 0.4.0 (August 17, 2016)
+- Release 2.2.0 [\#28](https://github.com/broadinstitute/puppet-certs/pull/28) ([rcalixte](https://github.com/rcalixte))
 
-### Summary
-Initial release
+## [2.1.1](https://github.com/broadinstitute/puppet-certs/tree/2.1.1) (2018-05-16)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.1.0...2.1.1)
+
+## [2.1.0](https://github.com/broadinstitute/puppet-certs/tree/2.1.0) (2018-05-16)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/1.2.1...2.1.0)
+
+### Added
+
+- Add validation parameter [\#25](https://github.com/broadinstitute/puppet-certs/pull/25) ([rcalixte](https://github.com/rcalixte))
+- Handle trusted certificate updates on EL6/7 [\#22](https://github.com/broadinstitute/puppet-certs/pull/22) ([jorhett](https://github.com/jorhett))
+- Refactor for modern Puppet [\#21](https://github.com/broadinstitute/puppet-certs/pull/21) ([jorhett](https://github.com/jorhett))
+
+### Fixed
+
+- Use puppet lookup so a hash merge of sites is possible [\#20](https://github.com/broadinstitute/puppet-certs/pull/20) ([jorhett](https://github.com/jorhett))
+
+## [1.2.1](https://github.com/broadinstitute/puppet-certs/tree/1.2.1) (2017-08-02)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/1.2.0...1.2.1)
+
+### Added
+
+- Validation for bool [\#14](https://github.com/broadinstitute/puppet-certs/pull/14) ([coreone](https://github.com/coreone))
+
+### Fixed
+
+- Fix boolean vs. string issue [\#13](https://github.com/broadinstitute/puppet-certs/pull/13) ([coreone](https://github.com/coreone))
+
+## [1.2.0](https://github.com/broadinstitute/puppet-certs/tree/1.2.0) (2017-07-28)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/1.1.0...1.2.0)
+
+### Added
+
+- More dhparams stuff [\#12](https://github.com/broadinstitute/puppet-certs/pull/12) ([coreone](https://github.com/coreone))
+- Add dhparam files as well as other cleanup [\#11](https://github.com/broadinstitute/puppet-certs/pull/11) ([coreone](https://github.com/coreone))
+
+## [1.1.0](https://github.com/broadinstitute/puppet-certs/tree/1.1.0) (2017-01-17)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/1.0.0...1.1.0)
+
+### Added
+
+- merge\_key and SPEC updates [\#7](https://github.com/broadinstitute/puppet-certs/pull/7) ([coreone](https://github.com/coreone))
+
+## [1.0.0](https://github.com/broadinstitute/puppet-certs/tree/1.0.0) (2016-09-06)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/0.4.0...1.0.0)
+
+### Added
+
+- Add tests, content instead of source logic, and ensure support [\#6](https://github.com/broadinstitute/puppet-certs/pull/6) ([coreone](https://github.com/coreone))
+- Update README [\#5](https://github.com/broadinstitute/puppet-certs/pull/5) ([rcalixte](https://github.com/rcalixte))
+- Testing fixes and global default settings [\#4](https://github.com/broadinstitute/puppet-certs/pull/4) ([coreone](https://github.com/coreone))
+- Various fixes and cert/chain merge ability [\#3](https://github.com/broadinstitute/puppet-certs/pull/3) ([coreone](https://github.com/coreone))
+
+## [0.4.0](https://github.com/broadinstitute/puppet-certs/tree/0.4.0) (2016-08-25)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/5d8732ab0fdf881256961da31e311343de59d77c...0.4.0)
+
+
+
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*

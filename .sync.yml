@@ -1,0 +1,32 @@
+---
+appveyor.yml:
+  delete: true
+.gitignore:
+  required:
+    - '/.librarian'
+    - '/.tmp'
+    - '/spec/fixtures/work-dir'
+.gitlab-ci.yml:
+  delete: true
+Rakefile:
+  changelog_project: 'puppet-certs'
+  changelog_user: 'broadinstitute'
+  changelog_version_tag_pattern: '%s'
+  extra_disabled_lint_checks:
+    - '80chars'
+    - 'autoloader_layout'
+    - 'puppet_url_without_modules'
+  requires:
+    - 'puppet-lint/tasks/puppet-lint'
+Gemfile:
+  optional:
+    ':development':
+      - gem: 'github_changelog_generator'
+.travis.yml:
+  delete: true
+.yardopts:
+  delete: true
+spec/default_facts.yml:
+  delete: true
+spec/spec_helper.rb:
+  hiera_config: 'spec/fixtures/hiera.yaml'
