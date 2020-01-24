@@ -6,6 +6,10 @@ All notable changes to this project will be documented in this file. The format 
 
 [Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.5.0...2.5.1)
 
+### Added
+
+- Convert to PDK [\#44](https://github.com/broadinstitute/puppet-certs/pull/44) ([coreone](https://github.com/coreone))
+
 ### Fixed
 
 - Make dhparam directory customizable \(Fixes \#38\) [\#45](https://github.com/broadinstitute/puppet-certs/pull/45) ([coreone](https://github.com/coreone))
