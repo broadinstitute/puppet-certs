@@ -1,7 +1,7 @@
 {
   "name": "broadinstitute-certs",
   "version": "2.5.1",
-  "author": "Riccardo Calixte <rcalixte@broadinstitute.org>",
+  "author": "Broad Institute <forge@broadinstitute.org>",
   "summary": "Configures and manages SSL certificate deployments, restarting services as configured.",
   "license": "Apache-2.0",
   "source": "git://github.com/broadinstitute/puppet-certs.git",

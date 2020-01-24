@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [2.5.1](https://github.com/broadinstitute/puppet-certs/tree/2.5.1) (2020-01-02)
+## [2.5.1](https://github.com/broadinstitute/puppet-certs/tree/2.5.1) (2020-01-24)
 
 [Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.5.0...2.5.1)
 
