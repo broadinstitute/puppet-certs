@@ -22,6 +22,7 @@ Gemfile:
   optional:
     ':development':
       - gem: 'github_changelog_generator'
+      - gem: 'pdk'
 .travis.yml:
   delete: true
 .yardopts:
