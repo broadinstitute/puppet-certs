@@ -1,6 +1,8 @@
 ---
 appveyor.yml:
   delete: true
+.devcontainer/devcontainer.json:
+  unmanaged: true
 .gitignore:
   required:
     - '/.librarian'
