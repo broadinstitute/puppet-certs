@@ -169,6 +169,14 @@
 #   - 'apache2' for Debian-based, Suse-based, and Gentoo-based systems
 #   - 'apache24' for FreeBSD-based systems
 #
+# [*source_cert_name*]
+# The name of the source certificate file.
+# Optional value. Default: (namevar).
+#
+# [*source_key_name*]
+# The name of the source key file.
+# Optional value. Default: (namevar).
+#
 # [*source_path*]
 # The location of the certificate files. Typically references a module's files.
 # e.g. 'puppet:///site_certs' will search for the mount point defined in the
@@ -244,6 +252,8 @@ define certs::site (
   String $dhparam_file                                     = $::certs::dhparam_file,
   Boolean $merge_dhparam                                   = false,
   Optional[Variant[Array[String],Boolean,String]] $service = $::certs::service,
+  Optional[String] $source_cert_name                       = undef,
+  Optional[String] $source_key_name                        = undef,
   String $owner                                            = $::certs::owner,
   String $group                                            = $::certs::group,
   Boolean $validate_x509                                   = $::certs::validate_x509,
@@ -270,6 +280,17 @@ define certs::site (
   $cert = "${name}${cert_ext}"
   $key  = "${name}${key_ext}"
 
+  if $source_cert_name {
+    $cert_src = "${source_cert_name}${cert_ext}"
+  } else {
+    $cert_src = $cert
+  }
+  if $source_key_name {
+    $key_src  = "${source_key_name}${key_ext}"
+  } else {
+    $key_src = $key
+  }
+
   if ($validate_x509) {
     validate_x509_rsa_key_pair("${cert_path}/${cert}", "${key_path}/${key}")
   }
@@ -280,8 +301,8 @@ define certs::site (
       $key_source = undef
     }
     default: {
-      $cert_source = "${source_path}/${cert}"
-      $key_source  = "${source_path}/${key}"
+      $cert_source = "${source_path}/${cert_src}"
+      $key_source  = "${source_path}/${key_src}"
     }
   }
 
