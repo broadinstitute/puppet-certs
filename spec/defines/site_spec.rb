@@ -1219,5 +1219,24 @@ describe 'certs::site', type: :define do
         is_expected.to contain_file('/etc/ssl/certs/chain.pem')
       }
     end
+
+    context 'with custom source names set' do
+      let(:params) do
+        {
+          'source_cert_name' => 'other_base.example.org',
+          'source_key_name'  => 'other_base.example.org',
+          'source_path'      => 'puppet:///site_certs/other_base.example.org',
+        }
+      end
+
+      it {
+        is_expected.to contain_file('/etc/ssl/certs/base.example.org.crt')
+          .with_source(%r{puppet:\/\/\/site_certs\/other_base.example.org\/other_base\.example\.org\.crt})
+      }
+      it {
+        is_expected.to contain_file('/etc/ssl/private/base.example.org.key')
+          .with_source(%r{puppet:\/\/\/site_certs\/other_base.example.org\/other_base\.example\.org\.key})
+      }
+    end
   end
 end
