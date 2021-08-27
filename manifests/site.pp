@@ -1,262 +1,250 @@
-# == Define: certs::site
 #
-# Puppet module for SSL certificate installation
-#
+# @summary Puppet module for SSL certificate installation.
 # Can be used in conjunction with puppetlabs/apache's apache::vhost
 # definitions, to provide the ssl_cert and ssl_key files, or any
 # other service requiring SSL certificates. It can also be used
 # independent of any Puppet-defined service.
 #
-# === Parameters
+# @example Without Hiera
+#   include certs
+#   $cname = 'www.example.com'
+#   certs::site { $cname:
+#     ca_cert        => true,
+#     ca_name        => 'caname',
+#     ca_source_path => 'puppet:///ca_certs',
+#     source_path    => 'puppet:///site_certificates',
+#   }
 #
-# [*ca_cert*]
-# Boolean for whether to look for a CA certificate file.
-# Optional value. Default: false.
+# @example With Hiera
+#   ---
+#   classes:
+#     - certs
+#   certs::sites:
+#     'www.example.com':
+#       ca_cert: true
+#       ca_name: 'caname'
+#       ca_source_path: 'puppet:///ca_certs'
+#       source_path: 'puppet:///site_certificates'
 #
-# [*ca_content*]
-# A string representing the contents of the CA file.
-# Optional value. Default: undef.
+# @example Resource Chaining with Apache Module
+#   Certs::Site<| |> -> Apache::Vhost<| |>
 #
-# [*ca_ext*]
-# The extension of the CA certificate file.
-# Optional value. Default: crt.
+# @param ca_cert
+#   Boolean for whether to look for a CA certificate file.
+#   Optional value. (default: false).
 #
-# [*ca_name*]
-# The name of the CA certificate file.
-# Optional value. Default: undef.
+# @param ca_content
+#   A string representing the contents of the CA file.
+#   Optional value. (default: undef).
 #
-# [*ca_path*]
-# Location where the CA certificate file will be stored on the managed node.
-# Optional value. Default: [*cert_path*].
+# @param ca_ext
+#   The extension of the CA certificate file.
+#   Optional value. (default: 'crt').
 #
-# [*ca_source_path*]
-# The location of the CA certificate file. Typically references a module's files.
-# e.g. 'puppet:///ca_certs' will search for the mount point defined in the
-# fileserver.conf on the Puppet Server for the specified files.
-# Optional value. Default: [*source_path*].
+# @param ca_name
+#   The name of the CA certificate file.
+#   Optional value. (default: undef).
 #
-# [*cert_chain*]
-# Boolean for whether to look for a certificate chain file.
-# Optional value. Default: false.
+# @param ca_path
+#   Location where the CA certificate file will be stored on the managed node.
+#   Optional value. (default: `cert_path`).
 #
-# [*cert_content*]
-# A string representing the contents of the certificate file.  This can only be
-# provided if $source_path is undefined or an error will occur.
-# Optional value. Default: undef.
+# @param ca_source_path
+#   The location of the CA certificate file. Typically references a module's files.
+#   e.g. `puppet:///ca_certs` will search for the mount point defined in the
+#   fileserver.conf on the Puppet Server for the specified files.
+#   Optional value. (default: `source_path`).
 #
-# [*cert_dir_mode*]
-# Permissions of the certificate directory.
-# Optional value. Default: '0755'.
+# @param cert_chain
+#   Boolean for whether to look for a certificate chain file.
+#   Optional value. (default: false).
 #
-# [*cert_ext*]
-# The extension of the certificate file.
-# Optional value. Default: '.crt'.
+# @param cert_content
+#   A string representing the contents of the certificate file.  This can only be
+#   provided if `$source_path` is undefined or an error will occur.
+#   Optional value. (default: undef).
 #
-# [*cert_mode*]
-# Permissions of the certificate files.
-# Optional value. Default: '0644'.
+# @param cert_dir_mode
+#   Permissions of the certificate directory.
+#   Optional value. (default: '0755').
 #
-# [*cert_path*]
-# Location where the certificate files will be stored on the managed node.
-# Optional value. Defaults:
-#   - '/etc/pki/tls/certs' on RedHat-based systems
-#   - '/etc/ssl/certs' on Debian-based and Suse-based systems
-#   - '/usr/local/etc/apache24' on FreeBSD-based systems
-#   - '/etc/ssl/apache2' on Gentoo-based systems
+# @param cert_ext
+#   The extension of the certificate file.
+#   Optional value. (default: '.crt').
 #
-# [*chain_content*]
-# A string representing the contents of the chain file.
-# Optional value. Default: undef.
+# @param cert_mode
+#   Permissions of the certificate files.
+#   Optional value. (default: '0644').
 #
-# [*chain_ext*]
-# The extension of the certificate chain file.
-# Optional value. Default: crt.
+# @param cert_path
+#   Location where the certificate files will be stored on the managed node.
+#   Optional value. Defaults:
+#     - `/etc/pki/tls/certs` on RedHat-based systems
+#     - `/etc/ssl/certs` on Debian-based and Suse-based systems
+#     - `/usr/local/etc/apache24` on FreeBSD-based systems
+#     - `/etc/ssl/apache2` on Gentoo-based systems
 #
-# [*chain_name*]
-# The name of the certificate chain file.
-# Optional value. Default: undef.
+# @param chain_content
+#   A string representing the contents of the chain file.
+#   Optional value. (default: undef).
 #
-# [*chain_path*]
-# Location where the certificate chain file will be stored on the managed node.
-# Optional value. Default: [*cert_path*].
+# @param chain_ext
+#   The extension of the certificate chain file.
+#   Optional value. (default: 'crt').
 #
-# [*chain_source_path*]
-# The location of the certificate chain file. Typically references a module's files.
-# e.g. 'puppet:///chain_certs' will search for the mount point defined in the
-# fileserver.conf on the Puppet Server for the specified files.
-# Optional value. Default: [*source_path*].
+# @param chain_name
+#   The name of the certificate chain file.
+#   Optional value. (default: undef).
 #
-# [*dhparam*]
-# A boolean value to determine whether a dhparam file should be placed on the
-# system along with the other certificate files.  The dhparam file will need to
-# exist on the source side just as with the other certificate files in order
-# for the file to be delivered.
-# Optional value. Default: false
+# @param chain_path
+#   Location where the certificate chain file will be stored on the managed node.
+#   Optional value. (default: `$cert_path`).
 #
-# [*dhparam_content*]
-# A string representing the contents of the dhparam file.  This option will
-# take precedence over dhparam_file if it exists on the source side.
-# Optional value. Default: undef.
+# @param chain_source_path
+#   The location of the certificate chain file. Typically references a module's files.
+#   e.g. `puppet:///chain_certs` will search for the mount point defined in the
+#   fileserver.conf on the Puppet Server for the specified files.
+#   Optional value. (default: `$source_path`).
 #
-# [*dhparam_dir*]
-# The directory in which the dhparam file should be placed.
-# Optional value. Default: ${cert_path}.
+# @param dhparam
+#   A boolean value to determine whether a dhparam file should be placed on the
+#   system along with the other certificate files.  The dhparam file will need to
+#   exist on the source side just as with the other certificate files in order
+#   for the file to be delivered.
+#   Optional value. (default: false).
 #
-# [*dhparam_file*]
-# The name of the dhparam file.
-# Optional value. Default: 'dh2048.pem'.
+# @param dhparam_content
+#   A string representing the contents of the dhparam file.  This option will
+#   take precedence over dhparam_file if it exists on the source side.
+#   Optional value. (default: undef).
 #
-# [*ensure*]
-# Ensure for the site resources.  If 'present', files will be put in place.  If
-# 'absent', files will be removed.
-# Optional value. Default: 'present'
+# @param dhparam_dir
+#   The directory in which the dhparam file should be placed.
+#   Optional value. (default: `$cert_path`).
 #
-# [*group*]
-# Name of the group owner of the certificates.
-# Optional value. Defaults:
-#   - 'root' for Redhat-based, Debian-based, and Suse-based systems
-#   - 'wheel' for FreeBSD and Gentoo-based systems
+# @param dhparam_file
+#   The name of the dhparam file.
+#   Optional value. (default: 'dh2048.pem').
 #
-# [*key_content*]
-# A string representing the contents of the key file.  This can only be
-# provided if $source_path is undefined or an error will occur.
-# Optional value. Default: undef.
+# @param ensure
+#   Ensure for the site resources.  If 'present', files will be put in place.  If
+#   'absent', files will be removed.
+#   Optional value. (default: 'present').
 #
-# [*key_dir_mode*]
-# Permissions of the private keys directory.
-# Optional value. Default: '0755'.
+# @param group
+#   Name of the group owner of the certificates.
+#   Optional value. Defaults:
+#     - `root` for Redhat-based, Debian-based, and Suse-based systems
+#     - `wheel` for FreeBSD and Gentoo-based systems
 #
-# [*key_ext*]
-# The extension of the private key file.
-# Optional value. Default: '.key'.
+# @param key_content
+#   A string representing the contents of the key file.  This can only be
+#   provided if `$source_path` is undefined or an error will occur.
+#   Optional value. (default: undef).
 #
-# [*key_mode*]
-# Permissions of the private keys.
-# Optional value. Default: '0600'.
+# @param key_dir_mode
+#   Permissions of the private keys directory.
+#   Optional value. (default: '0755').
 #
-# [*key_path*]
-# Location where the private keys will be stored on the managed node.
-# Optional value. Defaults:
-#   - '/etc/pki/tls/private' on RedHat-based systems
-#   - '/etc/ssl/private' on Debian-based and Suse-based systems
-#   - '/usr/local/etc/apache24' on FreeBSD-based systems
-#   - '/etc/ssl/apache2' on Gentoo-based systems
+# @param key_ext
+#   The extension of the private key file.
+#   Optional value. (default: '.key').
 #
-# [*merge_chain*]
-# Option to merge the CA and chain files into the actual certificate file,
-# which is required by some software.
-# Optional value. Default: false.
+# @param key_mode
+#   Permissions of the private keys.
+#   Optional value. (default: '0600').
 #
-# [*merge_dhparam*]
-# Option to merge the DH paramaters file into the actual certificate file,
-# which is required by some software.
-# Optional value. Default: false.
+# @param key_path
+#   Location where the private keys will be stored on the managed node.
+#   Optional value. Defaults:
+#     - `/etc/pki/tls/private` on RedHat-based systems
+#     - `/etc/ssl/private` on Debian-based and Suse-based systems
+#     - `/usr/local/etc/apache24` on FreeBSD-based systems
+#     - `/etc/ssl/apache2` on Gentoo-based systems
 #
-# [*merge_key*]
-# Option to merge the private into the actual certificate file, which is
-# required by some software.
-# Optional value. Default: false.
+# @param merge_chain
+#   Option to merge the CA and chain files into the actual certificate file,
+#   which is required by some software.
+#   Optional value. (default: false).
 #
-# [*owner*]
-# Name of the owner of the certificates.
-# Optional value. Default: 'root'.
+# @param merge_dhparam
+#   Option to merge the DH paramaters file into the actual certificate file,
+#   which is required by some software.
+#   Optional value. (default: false).
 #
-# [*service*]
-# Name of the server service(s) to notify when certificates are updated.
-# Setting to false (or any Boolean) will disable service notifications.
-# Optional value. Defaults:
-#   - 'httpd' for RedHat-based systems
-#   - 'apache2' for Debian-based, Suse-based, and Gentoo-based systems
-#   - 'apache24' for FreeBSD-based systems
+# @param merge_key
+#   Option to merge the private into the actual certificate file, which is
+#   required by some software.
+#   Optional value. (default: false).
 #
-# [*source_cert_name*]
-# The name of the source certificate file.
-# Optional value. Default: (namevar).
+# @param owner
+#   Name of the owner of the certificates.
+#   Optional value. (default: 'root').
 #
-# [*source_key_name*]
-# The name of the source key file.
-# Optional value. Default: (namevar).
+# @param service
+#   Name of the server service(s) to notify when certificates are updated.
+#   Setting to false (or any Boolean) will disable service notifications.
+#   Optional value. Defaults:
+#     - `httpd` for RedHat-based systems
+#     - `apache2` for Debian-based, Suse-based, and Gentoo-based systems
+#     - `apache24` for FreeBSD-based systems
 #
-# [*source_path*]
-# The location of the certificate files. Typically references a module's files.
-# e.g. 'puppet:///site_certs' will search for the mount point defined in the
-# fileserver.conf on the Puppet Server for the specified files.
+# @param source_cert_name
+#   The name of the source certificate file.
+#   Optional value. (default: `$namevar`).
 #
-# [*validate_x509*]
-# A boolean value to determine whether or not to validate the certificate and key pairs.
-# Failure will cause the catalog to fail compilation.
-# Optional value. Default: false.
+# @param source_key_name
+#   The name of the source key file.
+#   Optional value. (default: `$namevar`).
 #
-# === Examples
+# @param source_path
+#   The location of the certificate files. Typically references a module's files.
+#   e.g. `puppet:///site_certs` will search for the mount point defined in the
+#   fileserver.conf on the Puppet Server for the specified files.
 #
-#  Without Hiera:
-#
-#    include certs
-#    $cname = 'www.example.com'
-#    certs::site { $cname:
-#      ca_cert        => true,
-#      ca_name        => 'caname',
-#      ca_source_path => 'puppet:///ca_certs',
-#      source_path    => 'puppet:///site_certificates',
-#    }
-#
-#  With Hiera:
-#
-#    server.yaml
-#    ---
-#    classes:
-#      - certs
-#    certs::sites:
-#      'www.example.com':
-#        ca_cert: true
-#        ca_name: 'caname'
-#        ca_source_path: 'puppet:///ca_certs'
-#        source_path: 'puppet:///site_certificates'
-#
-#  Resource Chaining with Apache Module
-#
-#    manifest.pp
-#    ---
-#    Certs::Site<| |> -> Apache::Vhost<| |>
+# @param validate_x509
+#   A boolean value to determine whether or not to validate the certificate and key pairs.
+#   Failure will cause the catalog to fail compilation.
+#   Optional value. (default: false).
 #
 define certs::site (
   Enum['present','absent'] $ensure                         = 'present',
-  Optional[String] $source_path                            = $::certs::source_path,
-  Stdlib::Absolutepath $cert_path                          = $::certs::cert_path,
+  Boolean $ca_cert                                         = $::certs::ca_cert,
+  Optional[String] $ca_content                             = $::certs::ca_content,
+  String $ca_ext                                           = $::certs::ca_ext,
+  Optional[String] $ca_name                                = $::certs::ca_name,
+  Stdlib::Absolutepath $ca_path                            = $::certs::ca_path,
+  Boolean $cert_chain                                      = $::certs::cert_chain,
+  Optional[String] $cert_content                           = $::certs::cert_content,
   String $cert_dir_mode                                    = $::certs::cert_dir_mode,
   String $cert_ext                                         = $::certs::cert_ext,
   String $cert_mode                                        = $::certs::cert_mode,
-  Optional[String] $cert_content                           = $::certs::cert_content,
-  Stdlib::Absolutepath $key_path                           = $::certs::key_path,
-  String $key_dir_mode                                     = $::certs::key_dir_mode,
-  String $key_ext                                          = $::certs::key_ext,
-  String $key_mode                                         = $::certs::key_mode,
-  Boolean $merge_key                                       = false,
-  Optional[String] $key_content                            = $::certs::key_content,
-  Boolean $ca_cert                                         = $::certs::ca_cert,
-  Optional[String] $ca_name                                = $::certs::ca_name,
-  Optional[String] $ca_source_path                         = pick_default($::certs::ca_source_path, $source_path),
-  Stdlib::Absolutepath $ca_path                            = $::certs::ca_path,
-  String $ca_ext                                           = $::certs::ca_ext,
-  Optional[String] $ca_content                             = $::certs::ca_content,
-  Boolean $cert_chain                                      = $::certs::cert_chain,
+  Stdlib::Absolutepath $cert_path                          = $::certs::cert_path,
+  Optional[String] $chain_content                          = $::certs::chain_content,
+  String $chain_ext                                        = $::certs::chain_ext,
   Optional[String] $chain_name                             = $::certs::chain_name,
   Stdlib::Absolutepath $chain_path                         = $::certs::chain_path,
-  String $chain_ext                                        = $::certs::chain_ext,
-  Optional[String] $chain_source_path                      = pick_default($::certs::chain_source_path, $source_path),
-  Optional[String] $chain_content                          = $::certs::chain_content,
-  Boolean $merge_chain                                     = false,
   Boolean $dhparam                                         = false,
   Optional[String] $dhparam_content                        = undef,
   Optional[Stdlib::Absolutepath] $dhparam_dir              = undef,
   String $dhparam_file                                     = $::certs::dhparam_file,
+  String $group                                            = $::certs::group,
+  Optional[String] $key_content                            = $::certs::key_content,
+  String $key_dir_mode                                     = $::certs::key_dir_mode,
+  String $key_ext                                          = $::certs::key_ext,
+  String $key_mode                                         = $::certs::key_mode,
+  Stdlib::Absolutepath $key_path                           = $::certs::key_path,
+  Boolean $merge_chain                                     = false,
   Boolean $merge_dhparam                                   = false,
+  Boolean $merge_key                                       = false,
+  String $owner                                            = $::certs::owner,
   Optional[Variant[Array[String],Boolean,String]] $service = $::certs::service,
   Optional[String] $source_cert_name                       = undef,
   Optional[String] $source_key_name                        = undef,
-  String $owner                                            = $::certs::owner,
-  String $group                                            = $::certs::group,
+  Optional[String] $source_path                            = $::certs::source_path,
   Boolean $validate_x509                                   = $::certs::validate_x509,
+  Optional[String] $ca_source_path                         = pick_default($::certs::ca_source_path, $source_path),
+  Optional[String] $chain_source_path                      = pick_default($::certs::chain_source_path, $source_path),
 ) {
   # The base class must be included first because it is used by parameter defaults
   unless (defined(Class['certs'])) {

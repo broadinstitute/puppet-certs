@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [3.0.0](https://github.com/broadinstitute/puppet-certs/tree/3.0.0) (2021-09-10)
+
+[Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.5.1...3.0.0)
+
+### Changed
+
+- Remove RedHat 6 support [\#55](https://github.com/broadinstitute/puppet-certs/pull/55) ([coreone](https://github.com/coreone))
+
+### Added
+
+- Allow source filenames to be different than the certs::site namevar [\#53](https://github.com/broadinstitute/puppet-certs/pull/53) ([coreone](https://github.com/coreone))
+
 ## [2.5.1](https://github.com/broadinstitute/puppet-certs/tree/2.5.1) (2020-01-27)
 
 [Full Changelog](https://github.com/broadinstitute/puppet-certs/compare/2.5.0...2.5.1)
