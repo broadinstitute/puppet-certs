@@ -1,9 +1,9 @@
 {
   "name": "broadinstitute-certs",
-  "version": "2.5.1",
+  "version": "3.0.0",
   "author": "broadinstitute",
   "summary": "Configures and manages SSL certificate deployments, restarting services as configured.",
-  "license": "Apache-2.0",
+  "license": "BSD-3-Clause",
   "source": "git://github.com/broadinstitute/puppet-certs.git",
   "project_page": "https://github.com/broadinstitute/puppet-certs",
   "issues_url": "https://github.com/broadinstitute/puppet-certs/issues",
@@ -75,7 +75,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">=5.0.0 < 7.0.0"
+      "version_requirement": ">=5.0.0 < 8.0.0"
     }
   ],
   "pdk-version": "2.0.0",

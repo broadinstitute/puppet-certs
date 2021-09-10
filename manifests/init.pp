@@ -1,199 +1,201 @@
-# == Class: certs
 #
-# The certs class provides a single define, certs::site, configurable
-# within Hiera as well.
+# @summary The certs class provides a single define, `certs::site`, configurable within Hiera as well.
 #
-# === Parameters
+# @example Set some basic global options
+#  class { 'certs':
+#    cert_path => '/path/to/certs',
+#    key_path  => '/path/to/keys',
+#  }
 #
-# [*ca_cert*]
-# Boolean for whether to look for a CA certificate file.
-# Optional value. Default: false.
+# @param ca_cert
+#   Boolean for whether to look for a CA certificate file.
+#   Optional value. (default: false).
 #
-# [*ca_content*]
-# A string representing the contents of the CA file.
-# Optional value. Default: undef.
+# @param ca_content
+#   A string representing the contents of the CA file.
+#   Optional value. (default: undef).
 #
-# [*ca_ext*]
-# The extension of the CA certificate file.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: crt.
+# @param ca_ext
+#   The extension of the CA certificate file.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: 'crt').
 #
-# [*ca_name*]
-# The name of the CA certificate file.
-# Optional value. Default: undef.
+# @param ca_name
+#   The name of the CA certificate file.
+#   Optional value. (default: undef).
 #
-# [*ca_path*]
-# Location where the CA certificate file will be stored on the managed node.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: [*cert_path*].
+# @param ca_path
+#   Location where the CA certificate file will be stored on the managed node.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: `cert_path`).
 #
-# [*ca_source_path*]
-# The location of the CA certificate file. Typically references a module's files.
-# e.g. 'puppet:///ca_certs' will search for the mount point defined in the
-# fileserver.conf on the Puppet Server for the specified files.
-# Optional value. Default: [*source_path*].
+# @param ca_source_path
+#   The location of the CA certificate file. Typically references a module's files.
+#   e.g. `puppet:///ca_certs` will search for the mount point defined in the
+#   fileserver.conf on the Puppet Server for the specified files.
+#   Optional value. (default: `source_path`).
 #
-# [*cert_chain*]
-# Boolean for whether to look for a certificate chain file.
-# Optional value. Default: false.
+# @param cert_chain
+#   Boolean for whether to look for a certificate chain file.
+#   Optional value. (default: false).
 #
-# [*cert_content*]
-# A string representing the contents of the certificate file.  This can only be
-# provided if $source_path is undefined or an error will occur.
-# Optional value. Default: undef.
+# @param cert_content
+#   A string representing the contents of the certificate file.  This can only be
+#   provided if `$source_path` is undefined or an error will occur.
+#   Optional value. (default: undef).
 #
-# [*cert_dir_mode*]
-# Permissions of the certificate directory.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: '0755'.
+# @param cert_dir_mode
+#   Permissions of the certificate directory.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: '0755').
 #
-# [*cert_ext*]
-# The extension of the certificate file.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: '.crt'.
+# @param cert_ext
+#   The extension of the certificate file.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: '.crt').
 #
-# [*cert_mode*]
-# Permissions of the certificate files.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: '0644'.
+# @param cert_mode
+#   Permissions of the certificate files.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: '0644').
 #
-# [*cert_path*]
-# Location where the certificate files will be stored on the managed node.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Defaults:
-#   - '/etc/pki/tls/certs' on RedHat-based systems
-#   - '/etc/ssl/certs' on Debian-based and Suse-based systems
-#   - '/usr/local/etc/apache24' on FreeBSD-based systems
-#   - '/etc/ssl/apache2' on Gentoo-based systems
+# @param cert_path
+#   Location where the certificate files will be stored on the managed node.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. Defaults:
+#     - `/etc/pki/tls/certs` on RedHat-based systems
+#     - `/etc/ssl/certs` on Debian-based and Suse-based systems
+#     - `/usr/local/etc/apache24` on FreeBSD-based systems
+#     - `/etc/ssl/apache2` on Gentoo-based systems
 #
-# [*chain_name*]
-# The name of the certificate chain file.
-# Optional value. Default: undef.
+# @param chain_content
+#   A string representing the contents of the chain file.
+#   Optional value. (default: undef).
 #
-# [*chain_content*]
-# A string representing the contents of the chain file.
-# Optional value. Default: undef.
+# @param chain_ext
+#   The extension of the certificate chain file.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: 'crt').
 #
-# [*chain_ext*]
-# The extension of the certificate chain file.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: crt.
+# @param chain_name
+#   The name of the certificate chain file.
+#   Optional value. (default: undef).
 #
-# [*chain_path*]
-# Location where the certificate chain file will be stored on the managed node.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: [*cert_path*].
+# @param chain_path
+#   Location where the certificate chain file will be stored on the managed node.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: `$cert_path`).
 #
-# [*chain_source_path*]
-# The location of the certificate chain file. Typically references a module's files.
-# e.g. 'puppet:///chain_certs' will search for the mount point defined in the
-# fileserver.conf on the Puppet Server for the specified files.
-# Optional value. Default: [*source_path*].
+# @param chain_source_path
+#   The location of the certificate chain file. Typically references a module's files.
+#   e.g. `puppet:///chain_certs` will search for the mount point defined in the
+#   fileserver.conf on the Puppet Server for the specified files.
+#   Optional value. (default: `$source_path`).
 #
-# [*dhparam_file*]
-# The name of the dhparam file.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: 'dh2048.pem'.
+# @param dhparam_file
+#   The name of the dhparam file.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: 'dh2048.pem').
 #
-# [*group*]
-# Name of the group owner of the certificates.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Defaults:
-#   - 'root' for Redhat-based, Debian-based, and Suse-based systems
-#   - 'wheel' for FreeBSD and Gentoo-based systems
+# @param group
+#   Name of the group owner of the certificates.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. Defaults:
+#     - `root` for Redhat-based, Debian-based, and Suse-based systems
+#     - `wheel` for FreeBSD and Gentoo-based systems
 #
-# [*key_content*]
-# A string representing the contents of the key file.  This can only be
-# provided if $source_path is undefined or an error will occur.
-# Optional value. Default: undef.
+# @param key_content
+#   A string representing the contents of the key file.  This can only be
+#   provided if `$source_path` is undefined or an error will occur.
+#   Optional value. (default: undef).
 #
-# [*key_dir_mode*]
-# Permissions of the private keys directory.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: '0755'.
+# @param key_dir_mode
+#   Permissions of the private keys directory.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: '0755').
 #
-# [*key_ext*]
-# The extension of the private key file.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: '.key'.
+# @param key_ext
+#   The extension of the private key file.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: '.key').
 #
-# [*key_mode*]
-# Permissions of the private keys.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: '0600'.
+# @param key_mode
+#   Permissions of the private keys.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: '0600').
 #
-# [*key_path*]
-# Location where the private keys will be stored on the managed node.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Defaults:
-#   - '/etc/pki/tls/private' on RedHat-based systems
-#   - '/etc/ssl/private' on Debian-based and Suse-based systems
-#   - '/usr/local/etc/apache24' on FreeBSD-based systems
-#   - '/etc/ssl/apache2' on Gentoo-based systems
+# @param key_path
+#   Location where the private keys will be stored on the managed node.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. Defaults:
+#     - `/etc/pki/tls/private` on RedHat-based systems
+#     - `/etc/ssl/private` on Debian-based and Suse-based systems
+#     - `/usr/local/etc/apache24` on FreeBSD-based systems
+#     - `/etc/ssl/apache2` on Gentoo-based systems
 #
-# [*owner*]
-# Name of the owner of the certificates.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Default: 'root'.
+# @param owner
+#   Name of the owner of the certificates.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. (default: 'root').
 #
-# [*service*]
-# Name of the server service(s) to notify when certificates are updated.
-# Setting to false (or any Boolean) will disable service notifications.
-# This sets the default globally for use by all certs::site resources.
-# Optional value. Defaults:
-#   - 'httpd' for RedHat-based systems
-#   - 'apache2' for Debian-based, Suse-based, and Gentoo-based systems
-#   - 'apache24' for FreeBSD-based systems
+# @param service
+#   Name of the server service(s) to notify when certificates are updated.
+#   Setting to false (or any Boolean) will disable service notifications.
+#   This sets the default globally for use by all `certs::site` resources.
+#   Optional value. Defaults:
+#     - `httpd` for RedHat-based systems
+#     - `apache2` for Debian-based, Suse-based, and Gentoo-based systems
+#     - `apache24` for FreeBSD-based systems
 #
-# [*sites*]
-# A hash of certs::site configurations, typically provided by Hiera.
-# Optional value: Default: {}
+# @param sites
+#   A hash of `certs::site` configurations, typically provided by Hiera.
+#   Optional value: (default: {}).
 #
-# [*source_path*]
-# The location of the certificate files. Typically references a module's files.
-# e.g. 'puppet:///site_certs' will search for the mount point defined in the
-# fileserver.conf on the Puppet Server for the specified files.
+# @param source_path
+#   The location of the certificate files. Typically references a module's files.
+#   e.g. `puppet:///site_certs` will search for the mount point defined in the
+#   fileserver.conf on the Puppet Server for the specified files.
 #
-# [*supported_os*]
-# A boolean value for whether or not the running OS is supported by the module.
-# Configured by default data.
+# @param supported_os
+#   A boolean value for whether or not the running OS is supported by the module.
+#   Configured by default data.
 #
-# [*validate_x509*]
-# A boolean value to determine whether or not to validate the certificate and key pairs.
-# Failure will cause the catalog to fail compilation.
-# Optional value. Default: false.
+# @param validate_x509
+#   A boolean value to determine whether or not to validate the certificate and key pairs.
+#   Failure will cause the catalog to fail compilation.
+#   Optional value. (default: false).
 #
 class certs (
-  Stdlib::Absolutepath $cert_path,
-  Stdlib::Absolutepath $key_path,
   String $cert_dir_mode,
   String $cert_ext,
   String $cert_mode,
+  Stdlib::Absolutepath $cert_path,
   String $dhparam_file,
   String $group,
   String $key_dir_mode,
   String $key_ext,
   String $key_mode,
+  Stdlib::Absolutepath $key_path,
   String $owner,
-  Optional[String] $key_content                            = undef,
-  Optional[Variant[Array[String],Boolean,String]] $service = lookup('certs::service'),
-  Optional[String] $source_path                            = undef,
+  Boolean $ca_cert                                         = false,
   Optional[String] $ca_content                             = undef,
+  String $ca_ext                                           = lookup('certs::cert_ext'),
   Optional[String] $ca_name                                = undef,
-  Optional[String] $ca_source_path                         = $source_path,
+  Stdlib::Absolutepath $ca_path                            = lookup('certs::cert_path'),
+  Boolean $cert_chain                                      = false,
   Optional[String] $cert_content                           = undef,
   Optional[String] $chain_content                          = undef,
-  Optional[String] $chain_name                             = undef,
-  Optional[String] $chain_source_path                      = $source_path,
-  String $ca_ext                                           = lookup('certs::cert_ext'),
-  Stdlib::Absolutepath $ca_path                            = lookup('certs::cert_path'),
   String $chain_ext                                        = lookup('certs::cert_ext'),
+  Optional[String] $chain_name                             = undef,
   Stdlib::Absolutepath $chain_path                         = lookup('certs::cert_path'),
-  Boolean $ca_cert                                         = false,
-  Boolean $cert_chain                                      = false,
+  Optional[String] $key_content                            = undef,
+  Optional[Variant[Array[String],Boolean,String]] $service = lookup('certs::service'),
+  Hash $sites                                              = {},
+  Optional[String] $source_path                            = undef,
   Boolean $supported_os                                    = false,
   Boolean $validate_x509                                   = false,
-  Hash $sites                                              = {}
+  Optional[String] $ca_source_path                         = $source_path,
+  Optional[String] $chain_source_path                      = $source_path,
 ) {
   unless $supported_os {
     fail("Class['certs']: Unsupported osfamily: ${facts['osfamily']}")
