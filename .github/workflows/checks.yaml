@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: 'Checkout repo'
-        uses: 'actions/checkout@v2.3.4'
+        uses: 'actions/checkout@v2.3.5'
 
       - name: 'Set up Ruby'
         uses: 'ruby/setup-ruby@v1.82.0'
@@ -76,7 +76,7 @@ jobs:
           - '2.6'
     steps:
       - name: 'Checkout repo'
-        uses: 'actions/checkout@v2.3.4'
+        uses: 'actions/checkout@v2.3.5'
 
       - name: 'Set up Ruby'
         uses: 'ruby/setup-ruby@v1.82.0'
