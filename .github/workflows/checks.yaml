@@ -28,7 +28,7 @@ jobs:
           echo ::set-output name=version::$(ruby -e 'puts RUBY_VERSION')
 
       - name: 'Cache Ruby'
-        uses: 'actions/cache@v2.1.6'
+        uses: 'actions/cache@v2.1.7'
         with:
           path: 'vendor/bundle'
           key: ${{ runner.os }}-${{ steps.full-ruby-version.outputs.version }}-v1-gems-${{ hashFiles('**/Gemfile.lock') }}
@@ -89,7 +89,7 @@ jobs:
           echo ::set-output name=version::$(ruby -e 'puts RUBY_VERSION')
 
       - name: 'Cache Ruby'
-        uses: 'actions/cache@v2.1.6'
+        uses: 'actions/cache@v2.1.7'
         with:
           path: 'vendor/bundle'
           key: ${{ runner.os }}-${{ steps.full-ruby-version.outputs.version }}-v1-gems-${{ hashFiles('**/Gemfile.lock') }}
