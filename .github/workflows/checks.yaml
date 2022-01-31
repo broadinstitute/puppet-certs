@@ -18,7 +18,7 @@ jobs:
         uses: 'actions/checkout@v2.4.0'
 
       - name: 'Set up Ruby'
-        uses: 'ruby/setup-ruby@v1.94.0'
+        uses: 'ruby/setup-ruby@v1.97.0'
         with:
           ruby-version: '2.4'
 
@@ -79,7 +79,7 @@ jobs:
         uses: 'actions/checkout@v2.4.0'
 
       - name: 'Set up Ruby'
-        uses: 'ruby/setup-ruby@v1.94.0'
+        uses: 'ruby/setup-ruby@v1.97.0'
         with:
           ruby-version: ${{ matrix.ruby }}
 
