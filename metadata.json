@@ -4,7 +4,7 @@
   "author": "broadinstitute",
   "summary": "Configures and manages SSL certificate deployments, restarting services as configured.",
   "license": "BSD-3-Clause",
-  "source": "git://github.com/broadinstitute/puppet-certs.git",
+  "source": "https://github.com/broadinstitute/puppet-certs.git",
   "project_page": "https://github.com/broadinstitute/puppet-certs",
   "issues_url": "https://github.com/broadinstitute/puppet-certs/issues",
   "dependencies": [
@@ -79,6 +79,6 @@
     }
   ],
   "pdk-version": "2.0.0",
-  "template-url": "https://github.com/puppetlabs/pdk-templates#2.2.0",
-  "template-ref": "2.2.0-0-g2381db6"
+  "template-url": "https://github.com/puppetlabs/pdk-templates#2.4.0",
+  "template-ref": "2.4.0-0-gfa6b6d2"
 }
