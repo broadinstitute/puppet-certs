@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'certs', type: :class do
+describe 'certificates', type: :class do
   ['Debian', 'FreeBSD', 'Gentoo', 'RedHat'].each do |osfamily|
     context "on #{osfamily}" do
       if osfamily == 'Debian'
@@ -16,7 +16,7 @@ describe 'certs', type: :class do
         end
 
         context 'with defaults for all parameters' do
-          it { is_expected.to contain_class('certs') }
+          it { is_expected.to contain_class('certificates') }
         end
       end
 
@@ -31,7 +31,7 @@ describe 'certs', type: :class do
         end
 
         context 'with defaults for all parameters' do
-          it { is_expected.to contain_class('certs') }
+          it { is_expected.to contain_class('certificates') }
         end
       end
 
@@ -45,7 +45,7 @@ describe 'certs', type: :class do
         end
 
         context 'with defaults for all parameters' do
-          it { is_expected.to contain_class('certs') }
+          it { is_expected.to contain_class('certificates') }
         end
       end
 
@@ -60,7 +60,7 @@ describe 'certs', type: :class do
         end
 
         context 'with defaults for all parameters' do
-          it { is_expected.to contain_class('certs') }
+          it { is_expected.to contain_class('certificates') }
         end
       end
     end

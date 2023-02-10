@@ -11,12 +11,12 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", type: "dhcp",
     virtualbox__intnet: "vboxnet1"
 
-  config.vm.hostname = "puppet-certs.example.com"
+  config.vm.hostname = "puppet-certificates.example.com"
 
   config.vm.provider "virtualbox" do |vb|
    vb.gui = false
    vb.memory = "1024"
-   vb.name = "puppet-certs"
+   vb.name = "puppet-certificates"
   end
 
   config.vm.provision "file", source: "Gemfile", destination: "/tmp/Gemfile"
@@ -24,7 +24,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "file", source: "vagrant_files/hiera.yaml", destination: "/tmp/hiera.yaml"
   config.vm.provision "shell", path: "vagrant_files/centos7-p4.sh"
 
-  config.vm.synced_folder ".", "/etc/puppetlabs/code/modules/certs"
+  config.vm.synced_folder ".", "/etc/puppetlabs/code/modules/certificates"
 
   config.ssh.insert_key = false
 end

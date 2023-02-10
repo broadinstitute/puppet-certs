@@ -6,9 +6,9 @@
 # independent of any Puppet-defined service.
 #
 # @example Without Hiera
-#   include certs
+#   include certificates
 #   $cname = 'www.example.com'
-#   certs::site { $cname:
+#   certificates::site { $cname:
 #     ca_cert        => true,
 #     ca_name        => 'caname',
 #     ca_source_path => 'puppet:///ca_certs',
@@ -18,8 +18,8 @@
 # @example With Hiera
 #   ---
 #   classes:
-#     - certs
-#   certs::sites:
+#     - certificates
+#   certificates::sites:
 #     'www.example.com':
 #       ca_cert: true
 #       ca_name: 'caname'
@@ -27,7 +27,7 @@
 #       source_path: 'puppet:///site_certificates'
 #
 # @example Resource Chaining with Apache Module
-#   Certs::Site<| |> -> Apache::Vhost<| |>
+#   Certificates::Site<| |> -> Apache::Vhost<| |>
 #
 # @param ca_cert
 #   Boolean for whether to look for a CA certificate file.
@@ -207,52 +207,52 @@
 #   Failure will cause the catalog to fail compilation.
 #   Optional value. (default: false).
 #
-define certs::site (
+define certificates::site (
   Enum['present','absent'] $ensure                         = 'present',
-  Boolean $ca_cert                                         = $::certs::ca_cert,
-  Optional[String] $ca_content                             = $::certs::ca_content,
-  String $ca_ext                                           = $::certs::ca_ext,
-  Optional[String] $ca_name                                = $::certs::ca_name,
-  Stdlib::Absolutepath $ca_path                            = $::certs::ca_path,
-  Boolean $cert_chain                                      = $::certs::cert_chain,
-  Optional[String] $cert_content                           = $::certs::cert_content,
-  String $cert_dir_mode                                    = $::certs::cert_dir_mode,
-  String $cert_ext                                         = $::certs::cert_ext,
-  String $cert_mode                                        = $::certs::cert_mode,
-  Stdlib::Absolutepath $cert_path                          = $::certs::cert_path,
-  Optional[String] $chain_content                          = $::certs::chain_content,
-  String $chain_ext                                        = $::certs::chain_ext,
-  Optional[String] $chain_name                             = $::certs::chain_name,
-  Stdlib::Absolutepath $chain_path                         = $::certs::chain_path,
+  Boolean $ca_cert                                         = $::certificates::ca_cert,
+  Optional[String] $ca_content                             = $::certificates::ca_content,
+  String $ca_ext                                           = $::certificates::ca_ext,
+  Optional[String] $ca_name                                = $::certificates::ca_name,
+  Stdlib::Absolutepath $ca_path                            = $::certificates::ca_path,
+  Boolean $cert_chain                                      = $::certificates::cert_chain,
+  Optional[String] $cert_content                           = $::certificates::cert_content,
+  String $cert_dir_mode                                    = $::certificates::cert_dir_mode,
+  String $cert_ext                                         = $::certificates::cert_ext,
+  String $cert_mode                                        = $::certificates::cert_mode,
+  Stdlib::Absolutepath $cert_path                          = $::certificates::cert_path,
+  Optional[String] $chain_content                          = $::certificates::chain_content,
+  String $chain_ext                                        = $::certificates::chain_ext,
+  Optional[String] $chain_name                             = $::certificates::chain_name,
+  Stdlib::Absolutepath $chain_path                         = $::certificates::chain_path,
   Boolean $dhparam                                         = false,
   Optional[String] $dhparam_content                        = undef,
   Optional[Stdlib::Absolutepath] $dhparam_dir              = undef,
-  String $dhparam_file                                     = $::certs::dhparam_file,
-  String $group                                            = $::certs::group,
-  Optional[String] $key_content                            = $::certs::key_content,
-  String $key_dir_mode                                     = $::certs::key_dir_mode,
-  String $key_ext                                          = $::certs::key_ext,
-  String $key_mode                                         = $::certs::key_mode,
-  Stdlib::Absolutepath $key_path                           = $::certs::key_path,
+  String $dhparam_file                                     = $::certificates::dhparam_file,
+  String $group                                            = $::certificates::group,
+  Optional[String] $key_content                            = $::certificates::key_content,
+  String $key_dir_mode                                     = $::certificates::key_dir_mode,
+  String $key_ext                                          = $::certificates::key_ext,
+  String $key_mode                                         = $::certificates::key_mode,
+  Stdlib::Absolutepath $key_path                           = $::certificates::key_path,
   Boolean $merge_chain                                     = false,
   Boolean $merge_dhparam                                   = false,
   Boolean $merge_key                                       = false,
-  String $owner                                            = $::certs::owner,
-  Optional[Variant[Array[String],Boolean,String]] $service = $::certs::service,
+  String $owner                                            = $::certificates::owner,
+  Optional[Variant[Array[String],Boolean,String]] $service = $::certificates::service,
   Optional[String] $source_cert_name                       = undef,
   Optional[String] $source_key_name                        = undef,
-  Optional[String] $source_path                            = $::certs::source_path,
-  Boolean $validate_x509                                   = $::certs::validate_x509,
-  Optional[String] $ca_source_path                         = pick_default($::certs::ca_source_path, $source_path),
-  Optional[String] $chain_source_path                      = pick_default($::certs::chain_source_path, $source_path),
+  Optional[String] $source_path                            = $::certificates::source_path,
+  Boolean $validate_x509                                   = $::certificates::validate_x509,
+  Optional[String] $ca_source_path                         = pick_default($::certificates::ca_source_path, $source_path),
+  Optional[String] $chain_source_path                      = pick_default($::certificates::chain_source_path, $source_path),
 ) {
   # The base class must be included first because it is used by parameter defaults
-  unless (defined(Class['certs'])) {
-    fail('You must include the certs base class before using any certs defined resources')
+  unless (defined(Class['certificates'])) {
+    fail('You must include the certificates base class before using any certificates defined resources')
   }
 
   if ($source_path == undef and ($cert_content == undef or $key_content == undef)) {
-    fail('You must provide a source_path or cert_content/key_content combination for the SSL files to certs::site.')
+    fail('You must provide a source_path or cert_content/key_content combination for the SSL files to certificates::site.')
   }
 
   if ($source_path and ($cert_content or $key_content)) {
@@ -301,13 +301,13 @@ define certs::site (
 
   if ($cert_chain) {
     if ($chain_name == undef) {
-      fail('You must provide a chain_name value for the cert chain to certs::site.')
+      fail('You must provide a chain_name value for the cert chain to certificates::site.')
     }
     $chain = "${chain_name}${chain_ext}"
 
     if ($chain_content == undef) {
       if ($chain_source_path == undef) {
-        fail('You must provide a chain_source_path for the SSL files to certs::site.')
+        fail('You must provide a chain_source_path for the SSL files to certificates::site.')
       }
 
       $chain_source = "${chain_source_path}/${chain}"
@@ -326,13 +326,13 @@ define certs::site (
 
   if ($ca_cert) {
     if ($ca_name == undef) {
-      fail('You must provide a ca_name value for the CA cert to certs::site.')
+      fail('You must provide a ca_name value for the CA cert to certificates::site.')
     }
     $ca = "${ca_name}${ca_ext}"
 
     if ($ca_content == undef) {
       if ($ca_source_path == undef) {
-        fail('You must provide a ca_source_path for the SSL files to certs::site.')
+        fail('You must provide a ca_source_path for the SSL files to certificates::site.')
       }
 
       $ca_source = "${ca_source_path}/${ca}"

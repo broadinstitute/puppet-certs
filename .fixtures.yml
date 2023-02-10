@@ -5,4 +5,4 @@ fixtures:
     stdlib:
       repo: 'puppetlabs/stdlib'
   symlinks:
-    certs: "#{source_dir}"
+    certificates: "#{source_dir}"

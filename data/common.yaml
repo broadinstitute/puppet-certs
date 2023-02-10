@@ -1,11 +1,11 @@
 ---
-certs::supported_os: false
-certs::cert_dir_mode: '0755'
-certs::cert_ext: '.crt'
-certs::cert_mode: '0644'
-certs::dhparam_file: 'dh2048.pem'
-certs::key_dir_mode: '0755'
-certs::key_ext: '.key'
-certs::key_mode: '0600'
-certs::owner: 'root'
-certs::validate_x509: false
+certificates::supported_os: false
+certificates::cert_dir_mode: '0755'
+certificates::cert_ext: '.crt'
+certificates::cert_mode: '0644'
+certificates::dhparam_file: 'dh2048.pem'
+certificates::key_dir_mode: '0755'
+certificates::key_ext: '.key'
+certificates::key_mode: '0600'
+certificates::owner: 'root'
+certificates::validate_x509: false

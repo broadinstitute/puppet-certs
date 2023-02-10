@@ -1,6 +1,6 @@
 ---
-certs::cert_path: '/usr/local/etc/apache24'
-certs::key_path: '/usr/local/etc/apache24'
-certs::service: 'apache24'
-certs::group: 'wheel'
-certs::supported_os: true
+certificates::cert_path: '/usr/local/etc/apache24'
+certificates::key_path: '/usr/local/etc/apache24'
+certificates::service: 'apache24'
+certificates::group: 'wheel'
+certificates::supported_os: true

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe 'certs::site', type: :define do
+describe 'certificates::site', type: :define do
   let(:title) { 'base.example.org' }
 
   ['Debian', 'FreeBSD', 'Gentoo', 'RedHat', 'Suse'].each do |osfamily|
     context "on #{osfamily}" do
-      # This define requires the certs class, so make sure it's defined
+      # This define requires the certificates class, so make sure it's defined
       let :pre_condition do
-        'class { "certs": service => false, validate_x509 => false, cert_content => "cert1111", key_content => "key1111" }'
+        'class { "certificates": service => false, validate_x509 => false, cert_content => "cert1111", key_content => "key1111" }'
       end
 
       if osfamily == 'Debian'
@@ -129,9 +129,9 @@ describe 'certs::site', type: :define do
       }
     end
 
-    # This define requires the certs class, so make sure it's defined
+    # This define requires the certificates class, so make sure it's defined
     let :pre_condition do
-      'class { "certs": service => false, validate_x509 => false}'
+      'class { "certificates": service => false, validate_x509 => false}'
     end
 
     context 'with only cert and key content set' do

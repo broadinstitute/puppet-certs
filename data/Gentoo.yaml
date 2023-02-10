@@ -1,6 +1,6 @@
 ---
-certs::cert_path: '/etc/ssl/apache2'
-certs::key_path: '/etc/ssl/apache2'
-certs::service: 'apache2'
-certs::group: 'wheel'
-certs::supported_os: true
+certificates::cert_path: '/etc/ssl/apache2'
+certificates::key_path: '/etc/ssl/apache2'
+certificates::service: 'apache2'
+certificates::group: 'wheel'
+certificates::supported_os: true

@@ -1,6 +1,6 @@
 ---
-certs::cert_path: '/etc/pki/tls/certs'
-certs::key_path: '/etc/pki/tls/private'
-certs::service: 'httpd'
-certs::group: 'root'
-certs::supported_os: true
+certificates::cert_path: '/etc/pki/tls/certs'
+certificates::key_path: '/etc/pki/tls/private'
+certificates::service: 'httpd'
+certificates::group: 'root'
+certificates::supported_os: true

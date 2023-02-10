@@ -1,6 +1,6 @@
 ---
-certs::cert_path: '/etc/ssl/certs'
-certs::key_path: '/etc/ssl/private'
-certs::service: 'apache2'
-certs::group: 'root'
-certs::supported_os: true
+certificates::cert_path: '/etc/ssl/certs'
+certificates::key_path: '/etc/ssl/private'
+certificates::service: 'apache2'
+certificates::group: 'root'
+certificates::supported_os: true

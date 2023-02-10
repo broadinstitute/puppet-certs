@@ -1,8 +1,6 @@
 ---
 appveyor.yml:
   delete: true
-.devcontainer/devcontainer.json:
-  unmanaged: true
 .gitignore:
   required:
     - '/.librarian'
@@ -11,7 +9,7 @@ appveyor.yml:
 .gitlab-ci.yml:
   delete: true
 Rakefile:
-  changelog_project: 'puppet-certs'
+  changelog_project: 'puppet-certificates'
   changelog_user: 'broadinstitute'
   changelog_version_tag_pattern: '%s'
   extra_disabled_lint_checks:

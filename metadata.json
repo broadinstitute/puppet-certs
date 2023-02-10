@@ -1,20 +1,20 @@
 {
-  "name": "broadinstitute-certs",
-  "version": "3.0.0",
+  "name": "broadinstitute-certificates",
+  "version": "4.0.0",
   "author": "broadinstitute",
   "summary": "Configures and manages SSL certificate deployments, restarting services as configured.",
   "license": "BSD-3-Clause",
-  "source": "https://github.com/broadinstitute/puppet-certs.git",
-  "project_page": "https://github.com/broadinstitute/puppet-certs",
-  "issues_url": "https://github.com/broadinstitute/puppet-certs/issues",
+  "source": "https://github.com/broadinstitute/puppet-certificates.git",
+  "project_page": "https://github.com/broadinstitute/puppet-certificates",
+  "issues_url": "https://github.com/broadinstitute/puppet-certificates/issues",
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
-      "version_requirement": ">= 4.12.0 < 7.0.0"
+      "version_requirement": ">= 4.12.0 < 9.0.0"
     },
     {
       "name": "puppetlabs/concat",
-      "version_requirement": ">= 1.1.1 < 7.0.0"
+      "version_requirement": ">= 1.1.1 < 8.0.0"
     }
   ],
   "operatingsystem_support": [
@@ -22,28 +22,32 @@
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
         "7",
-        "8"
+        "8",
+        "9"
       ]
     },
     {
@@ -60,7 +64,8 @@
         "14.04",
         "16.04",
         "18.04",
-        "20.04"
+        "20.04",
+        "22.04"
       ]
     },
     {
@@ -78,7 +83,7 @@
       "version_requirement": ">=5.0.0 < 8.0.0"
     }
   ],
-  "pdk-version": "2.0.0",
-  "template-url": "https://github.com/puppetlabs/pdk-templates#2.4.0",
-  "template-ref": "2.4.0-0-gfa6b6d2"
+  "pdk-version": "2.6.1",
+  "template-url": "https://github.com/puppetlabs/pdk-templates#2.7.1",
+  "template-ref": "tags/2.7.1-0-g9a16c87"
 }

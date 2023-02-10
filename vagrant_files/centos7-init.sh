@@ -13,6 +13,6 @@ gem install bundle rake --no-rdoc --no-ri
 /usr/local/bin/bundle config --global silence_root_warning 1
 cd /etc/puppetlabs/code
 /usr/local/bin/bundle install
-cd /etc/puppetlabs/code/modules/certs
+cd /etc/puppetlabs/code/modules/certificates
 rm -f Puppetfile.lock
 /usr/local/bin/librarian-puppet install --verbose --path=/etc/puppetlabs/code/modules
