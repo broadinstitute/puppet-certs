@@ -8,6 +8,7 @@
 
 ## Table of Contents
 
+* [Notice] (#notice)
 * [Overview](#overview)
 * [Module Description](#module-description)
 * [Setup](#setup)
@@ -18,6 +19,10 @@
 * [Reference](#reference)
 * [Limitations - OS compatibility, etc.](#limitations)
 * [Contributors](#contributors)
+
+## Notice
+
+**This module has been renamed to `puppet-certificates` due to naming conflicts and as such is being deprecated. You can find a fork of this module at [puppet-certificates](https://github.com/broadinstitute/puppet-certificates).**
 
 ## Overview
 

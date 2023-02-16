@@ -1,6 +1,6 @@
 {
   "name": "broadinstitute-certs",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "author": "broadinstitute",
   "summary": "Configures and manages SSL certificate deployments, restarting services as configured.",
   "license": "BSD-3-Clause",
